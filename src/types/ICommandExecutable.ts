@@ -1,6 +1,11 @@
-import { CacheType, Interaction, SlashCommandBuilder } from "discord.js";
+import {
+	CacheType,
+	CommandInteraction,
+	Interaction,
+	SlashCommandBuilder,
+} from "discord.js";
 
 export interface ICommandExecutable {
-	execute: (interaction: any) => Promise<void>;
+	execute: (interaction: CommandInteraction) => Promise<void>;
 	command: SlashCommandBuilder;
 }
