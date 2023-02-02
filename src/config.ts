@@ -1,3 +1,8 @@
+interface CalendarConfig {
+	id: string;
+	color: string;
+}
+
 interface BotConfig {
 	guildId: string;
 	chariotId: string;
@@ -7,6 +12,14 @@ interface BotConfig {
 	spartanId: string;
 	hurricaneId: string;
 	moderatorId: string;
+	calendars: {
+		chariot: CalendarConfig;
+		dynamo: CalendarConfig;
+		amazon: CalendarConfig;
+		centurion: CalendarConfig;
+		spartan: CalendarConfig;
+		hurricane: CalendarConfig;
+	};
 }
 
 const stage = process.env.STAGE || "dev";
@@ -20,6 +33,32 @@ const devConfig: BotConfig = {
 	spartanId: "1070298127942303754",
 	hurricaneId: "1070298181767811092",
 	moderatorId: "1070298227783520297",
+	calendars: {
+		centurion: {
+			id: "11026484",
+			color: "#cf2424",
+		},
+		chariot: {
+			id: "11026483",
+			color: "#f6c811",
+		},
+		amazon: {
+			color: "#2951b9",
+			id: "11026444",
+		},
+		dynamo: {
+			color: "#8763ca",
+			id: "11026445",
+		},
+		hurricane: {
+			id: "11026485",
+			color: "#5a8121",
+		},
+		spartan: {
+			color: "#2951b9",
+			id: "11026444",
+		},
+	},
 };
 
 const configs: { [key: string]: BotConfig } = {

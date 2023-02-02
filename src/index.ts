@@ -11,6 +11,8 @@ import config from "./config";
 import ping from "./commands/ping";
 import registerCommands from "./registerCommands";
 import { ICommandExecutable } from "./types/ICommandExecutable";
+import fetchCalendarData from "./fetchCalendarData";
+import show_training from "./commands/show_training";
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -25,15 +27,17 @@ if (!CLIENT_ID) {
 
 const commands: { [key: string]: ICommandExecutable } = {
 	[ping.command.name]: ping,
+	[show_training.command.name]: show_training,
 };
 
 (async () => await registerCommands(commands))();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.once(Events.ClientReady, (c) => {
+client.once(Events.ClientReady, async (c) => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 	c.user.setActivity("Powerchair Football", { type: ActivityType.Playing });
+	global.calendar_cache = await fetchCalendarData();
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
