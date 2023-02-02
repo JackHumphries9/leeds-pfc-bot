@@ -13,15 +13,18 @@ const refresh_cache: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("refresh-cache")
 		.setDescription("Refreshes the TeamUp Cache")
-		.addBooleanOption(
-			new SlashCommandBooleanOption()
-				.setName("data")
-				.setDescription("Show the JSON data back from the API")
-		) as any,
+		.addBooleanOption((opt) => {
+			opt.setName("data");
+			opt.setDescription("Show the JSON data back from the API");
+			return opt;
+		}) as any,
 	execute: async (interaction) => {
 		const action = await interaction.deferReply();
 
 		let card = new EmbedBuilder();
+
+		//@ts-ignore
+		const showData: boolean = interaction.options.getBoolean("data");
 
 		try {
 			const data = await fetchCalendarData();
@@ -31,9 +34,11 @@ const refresh_cache: ICommandExecutable = {
 			card.setTitle("Success!").setColor("#00FF00")
 				.setDescription(`Sucessfully updated the calendar cache.
 ${
-	true
+	showData
 		? `*Data*: 
-${JSON.stringify(data, null, 4)}`
+\`\`\`json
+${JSON.stringify(data, null, 4)}
+\`\`\``
 		: ""
 }
                 `);

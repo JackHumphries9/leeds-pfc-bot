@@ -13,6 +13,7 @@ import registerCommands from "./registerCommands";
 import { ICommandExecutable } from "./types/ICommandExecutable";
 import fetchCalendarData from "./fetchCalendarData";
 import show_training from "./commands/show_training";
+import refresh_cache from "./commands/refresh_cache";
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -28,6 +29,7 @@ if (!CLIENT_ID) {
 const commands: { [key: string]: ICommandExecutable } = {
 	[ping.command.name]: ping,
 	[show_training.command.name]: show_training,
+	[refresh_cache.command.name]: refresh_cache,
 };
 
 (async () => await registerCommands(commands))();
