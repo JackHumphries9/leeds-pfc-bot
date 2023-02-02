@@ -26,7 +26,7 @@ if (!CLIENT_ID) {
 	throw new Error("No client id provided");
 }
 
-const commands: { [key: string]: ICommandExecutable } = {
+global.commands = {
 	[ping.command.name]: ping,
 	[show_training.command.name]: show_training,
 	[refresh_cache.command.name]: refresh_cache,
@@ -45,7 +45,7 @@ client.once(Events.ClientReady, async (c) => {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isCommand()) return;
 
-	const command = commands[interaction.commandName];
+	const command = global.commands[interaction.commandName];
 
 	if (!command) return;
 
