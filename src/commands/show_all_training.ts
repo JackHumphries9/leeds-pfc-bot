@@ -5,7 +5,7 @@ import niceDate from "../utils/niceDate";
 
 const show_training: ICommandExecutable = {
 	command: new SlashCommandBuilder()
-		.setName("show-all-training")
+		.setName("all-training")
 		.setDescription("Shows all training sessions for the week"),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
