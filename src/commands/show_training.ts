@@ -11,7 +11,7 @@ import { ICommandExecutable } from "../types/ICommandExecutable";
 
 const show_training: ICommandExecutable = {
 	command: new SlashCommandBuilder()
-		.setName("show_training")
+		.setName("show-training")
 		.setDescription("Shows all training sessions for the week"),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: false });
@@ -58,35 +58,30 @@ const show_training: ICommandExecutable = {
 				}
 
 				//Find Color from config
-				let color = "#4aaace";
+				let colour = "#4aaace";
+				let team = "";
 
-				Object.keys(config.calendars).forEach((key) => {
+				Object.keys(config.teams).forEach((key) => {
 					if (
-						event.subcalendar_ids.includes(config.calendars[key].id)
+						event.subcalendar_ids.includes(
+							config.teams[key].teamupId
+						)
 					) {
-						color = config.calendars[key].color;
+						team = team + key;
+						colour = config.teams[key].colour;
 					}
 				});
 
 				return new EmbedBuilder()
-					.setColor(color as ColorResolvable)
+					.setColor(colour as ColorResolvable)
 					.setTitle(event.title)
 					.setDescription(
 						`**Time**: ${meta}
-
-                        ${
-							event.notes.length > 1
-								? `**Notes**: ${event.notes}`
-								: "  "
-						}`
-					);
-				// .setFooter({
-				// 	text: `From: ${new Date(event.start_dt).toLocaleString(
-				// 		"en-GB"
-				// 	)} to ${new Date(event.end_dt).toLocaleString(
-				// 		"en-GB"
-				// 	)}`,
-				// });
+${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
+					)
+					.setFooter({
+						text: `For Teams: ${team}`,
+					});
 			}),
 		});
 
