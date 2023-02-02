@@ -14,12 +14,9 @@ const registerCommands = async (commands: {
 
 		console.log(`Started refreshing application (/) commands.`);
 
-		const data = await rest.put(
-			Routes.applicationCommands(process.env.CLIENT_ID),
-			{
-				body: parsedCommands,
-			}
-		);
+		await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
+			body: parsedCommands,
+		});
 
 		console.log(`Successfully reloaded application (/) commands.`);
 	} catch (error) {

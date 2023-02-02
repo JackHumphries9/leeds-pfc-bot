@@ -1,6 +1,7 @@
 import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
+import niceDate from "../utils/niceDate";
 
 const show_training: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -39,30 +40,11 @@ const show_training: ICommandExecutable = {
 
 		interaction.followUp({
 			embeds: global.calendar_cache.map((event) => {
-				let meta = ``;
-
-				if (
-					new Date(event.start_dt).getDay() ===
-					new Date(event.end_dt).getDay()
-				) {
-					meta = `${new Date(event.start_dt).toLocaleString("en-GB", {
-						dateStyle: "full",
-						timeStyle: "short",
-					})} to ${new Date(event.end_dt).toLocaleTimeString(
-						"en-GB",
-						{
-							timeStyle: "short",
-						}
-					)}`;
-				} else {
-					meta = `${new Date(event.start_dt).toLocaleString("en-GB", {
-						dateStyle: "full",
-						timeStyle: "short",
-					})} to ${new Date(event.start_dt).toLocaleString("en-GB", {
-						dateStyle: "full",
-						timeStyle: "short",
-					})}`;
-				}
+				const meta = niceDate(
+					new Date(event.start_dt),
+					new Date(event.end_dt),
+					event.all_day
+				);
 
 				return new EmbedBuilder()
 					.setColor(
@@ -76,7 +58,11 @@ ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
 					)
 					.setFooter({
 						text: `For: ${event.subcalendar_ids
-							.map((id) => config.colorMap[id.toString()].name)
+							.map((id) =>
+								config.colorMap[id.toString()]
+									? config.colorMap[id.toString()].name
+									: "Unknown"
+							)
 							.join(", ")}`,
 					});
 			}),
