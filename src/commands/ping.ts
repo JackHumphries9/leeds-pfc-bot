@@ -12,6 +12,8 @@ const ping: ICommandExecutable = {
 			.setTitle("Pong!")
 			.setDescription("Pong!");
 
+		interaction.channel.send("Another message before the followup!");
+
 		interaction.followUp({
 			embeds: [card],
 		});
