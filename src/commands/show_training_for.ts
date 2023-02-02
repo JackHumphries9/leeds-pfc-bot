@@ -6,10 +6,37 @@ import niceDate from "../utils/niceDate";
 
 const my_training: ICommandExecutable = {
 	command: new SlashCommandBuilder()
-		.setName("my-training")
-		.setDescription("Shows your training sessions for the week"),
+		.setName("show-training-for")
+		.setDescription("Shows your training sessions for the week")
+		.setDefaultMemberPermissions(0x8 | 0x20 | 0x200000000)
+		.addMentionableOption((option) =>
+			option
+				.setName("team")
+				.setDescription("The team to show training for")
+				.setRequired(true)
+		) as any,
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
+
+		if (
+			!interaction.memberPermissions.has("Administrator") ||
+			!interaction.memberPermissions.has("ManageGuild")
+		) {
+			interaction.followUp({
+				embeds: [
+					new EmbedBuilder()
+						.setTitle("Error!")
+						.setColor("#FF0000")
+						.setDescription(
+							"You do not have the required permissions to run this command."
+						),
+				],
+			});
+			return;
+		}
+
+		//@ts-ignore
+		const teamId = interaction.options.getMentionable("team").id;
 
 		if (!global.calendar_cache) {
 			const card = new EmbedBuilder()
@@ -42,15 +69,10 @@ const my_training: ICommandExecutable = {
 		const embeds = global.calendar_cache
 			.map((event) => {
 				var shouldShow = false;
-
 				event.subcalendar_ids.forEach((id) => {
 					if (
-						//@ts-ignore
-						interaction.member.roles.cache.find(
-							(role) =>
-								role.id.toString() ===
-								config.teamMap[id.toString()].roleId
-						)
+						config.teamMap[id.toString()].roleId ===
+						teamId.toString()
 					) {
 						shouldShow = true;
 					}
@@ -105,6 +127,8 @@ ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
 		interaction.followUp({
 			embeds: embeds,
 		});
+
+		//await interaction.reply("Pong!");
 	},
 };
 

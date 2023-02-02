@@ -6,6 +6,7 @@ import show_training from "./commands/show_all_training";
 import refresh_cache from "./commands/refresh_cache";
 import { logError, info } from "./utils/logger";
 import my_training from "./commands/my_training";
+import show_training_for from "./commands/show_training_for";
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -23,6 +24,7 @@ global.commands = {
 	[show_training.command.name]: show_training,
 	[my_training.command.name]: my_training,
 	[refresh_cache.command.name]: refresh_cache,
+	[show_training_for.command.name]: show_training_for,
 };
 
 (async () => await registerCommands(global.commands))();

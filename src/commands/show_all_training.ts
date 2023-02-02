@@ -67,8 +67,6 @@ ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
 					});
 			}),
 		});
-
-		//await interaction.reply("Pong!");
 	},
 };
 
