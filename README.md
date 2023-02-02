@@ -29,9 +29,9 @@ After having a chat with the Leeds Powerchair Football Club coaches, I decided t
 
 ### Built With
 
--   [Commander.js](https://github.com/tj/commander.js)
--   [Chalk](https://github.com/chalk/chalk)
+-   [Discord.js](https://github.com/discordjs/discord.js)
 -   [Typescript](https://github.com/microsoft/TypeScript)
+-   [TeamUp API](https://apidocs.teamup.com)
 
 ## License
 
