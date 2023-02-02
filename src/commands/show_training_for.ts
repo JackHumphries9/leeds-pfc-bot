@@ -4,17 +4,18 @@ import { ICommandExecutable } from "../types/ICommandExecutable";
 import { debug } from "../utils/logger";
 import niceDate from "../utils/niceDate";
 
-const my_training: ICommandExecutable = {
+const show_training_for: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("show-training-for")
 		.setDescription("Shows your training sessions for the week")
 		.setDefaultMemberPermissions(0x8 | 0x20 | 0x200000000)
-		.addMentionableOption((option) =>
+		.addRoleOption((option) =>
 			option
 				.setName("team")
 				.setDescription("The team to show training for")
 				.setRequired(true)
 		) as any,
+
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
@@ -36,7 +37,7 @@ const my_training: ICommandExecutable = {
 		}
 
 		//@ts-ignore
-		const teamId = interaction.options.getMentionable("team").id;
+		const teamId = interaction.options.getRole("team").id;
 
 		if (!global.calendar_cache) {
 			const card = new EmbedBuilder()
@@ -132,4 +133,4 @@ ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
 	},
 };
 
-export default my_training;
+export default show_training_for;
