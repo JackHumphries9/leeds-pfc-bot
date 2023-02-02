@@ -4,7 +4,7 @@ import { ICommandExecutable } from "../types/ICommandExecutable";
 
 const show_training: ICommandExecutable = {
 	command: new SlashCommandBuilder()
-		.setName("show-training")
+		.setName("show-all-training")
 		.setDescription("Shows all training sessions for the week"),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: false });
@@ -64,30 +64,20 @@ const show_training: ICommandExecutable = {
 					})}`;
 				}
 
-				//Find Color from config
-				let colour = "#4aaace";
-				let team = "";
-
-				Object.keys(config.teams).forEach((key) => {
-					if (
-						event.subcalendar_ids.includes(
-							config.teams[key].teamupId
-						)
-					) {
-						team = team + key;
-						colour = config.teams[key].colour;
-					}
-				});
-
 				return new EmbedBuilder()
-					.setColor(colour as ColorResolvable)
+					.setColor(
+						config.colorMap[event.subcalendar_ids[0]].colour ||
+							("#4aaace" as ColorResolvable)
+					)
 					.setTitle(event.title)
 					.setDescription(
 						`**Time**: ${meta}
 ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
 					)
 					.setFooter({
-						text: `For Teams: ${team}`,
+						text: `For: ${event.subcalendar_ids
+							.map((id) => config.colorMap[id.toString()].name)
+							.join(", ")}`,
 					});
 			}),
 		});
