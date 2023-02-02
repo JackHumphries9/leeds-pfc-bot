@@ -6,13 +6,13 @@ const ping: ICommandExecutable = {
 		.setName("ping")
 		.setDescription("Replies with pong!"),
 	execute: async (interaction) => {
-		const action = await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ ephemeral: true });
 
 		const card = new EmbedBuilder()
 			.setTitle("Pong!")
 			.setDescription("Pong!");
 
-		interaction.channel.send("Another message before the followup!");
+		//interaction.channel.send("Another message before the followup!");
 
 		interaction.followUp({
 			embeds: [card],

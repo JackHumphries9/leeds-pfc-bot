@@ -48,7 +48,7 @@ const show_training: ICommandExecutable = {
 
 				return new EmbedBuilder()
 					.setColor(
-						config.colorMap[event.subcalendar_ids[0]].colour ||
+						config.teamMap[event.subcalendar_ids[0]].colour ||
 							("#4aaace" as ColorResolvable)
 					)
 					.setTitle(event.title)
@@ -59,8 +59,8 @@ ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
 					.setFooter({
 						text: `For: ${event.subcalendar_ids
 							.map((id) =>
-								config.colorMap[id.toString()]
-									? config.colorMap[id.toString()].name
+								config.teamMap[id.toString()]
+									? config.teamMap[id.toString()].name
 									: "Unknown"
 							)
 							.join(", ")}`,

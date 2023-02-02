@@ -6,13 +6,31 @@ const refresh_cache: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("refresh-cache")
 		.setDescription("Refreshes the TeamUp Cache")
+		.setDefaultMemberPermissions(["ADMINISTRATOR", "MANAGE_GUILD"])
 		.addBooleanOption((opt) => {
 			opt.setName("data");
 			opt.setDescription("Show the JSON data back from the API");
 			return opt;
 		}) as any,
 	execute: async (interaction) => {
-		const action = await interaction.deferReply();
+		await interaction.deferReply();
+
+		if (
+			!interaction.memberPermissions.has("Administrator") ||
+			!interaction.memberPermissions.has("ManageGuild")
+		) {
+			interaction.followUp({
+				embeds: [
+					new EmbedBuilder()
+						.setTitle("Error!")
+						.setColor("#FF0000")
+						.setDescription(
+							"You do not have the required permissions to run this command."
+						),
+				],
+			});
+			return;
+		}
 
 		let card = new EmbedBuilder();
 
