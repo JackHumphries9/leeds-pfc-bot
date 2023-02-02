@@ -1,11 +1,4 @@
-import {
-	CacheType,
-	Embed,
-	EmbedBuilder,
-	Interaction,
-	SlashCommandBooleanOption,
-	SlashCommandBuilder,
-} from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import fetchCalendarData from "../fetchCalendarData";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 

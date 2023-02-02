@@ -1,16 +1,6 @@
-import {
-	ActivityType,
-	Client,
-	Collection,
-	Events,
-	GatewayIntentBits,
-	REST,
-	Routes,
-} from "discord.js";
-import config from "./config";
+import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import ping from "./commands/ping";
 import registerCommands from "./registerCommands";
-import { ICommandExecutable } from "./types/ICommandExecutable";
 import fetchCalendarData from "./fetchCalendarData";
 import show_training from "./commands/show_training";
 import refresh_cache from "./commands/refresh_cache";

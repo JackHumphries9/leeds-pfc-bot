@@ -1,10 +1,4 @@
-import {
-	CacheType,
-	Embed,
-	EmbedBuilder,
-	Interaction,
-	SlashCommandBuilder,
-} from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 
 const ping: ICommandExecutable = {

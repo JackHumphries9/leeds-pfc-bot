@@ -1,11 +1,4 @@
-import {
-	CacheType,
-	ColorResolvable,
-	Embed,
-	EmbedBuilder,
-	Interaction,
-	SlashCommandBuilder,
-} from "discord.js";
+import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 
