@@ -1,4 +1,5 @@
 import { TeamUpEvent } from "./types/TeamUpEvent";
+import { info } from "./utils/logger";
 import {
 	dateToTeamUpFormat,
 	firstDayOfWeek,
@@ -29,6 +30,8 @@ const fetchCalendarData = async (): Promise<TeamUpEvent[]> => {
 	);
 
 	const json = await data.json();
+
+	info("Successfully fetched calendar data");
 
 	return json.events;
 };

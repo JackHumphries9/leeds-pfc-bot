@@ -1,5 +1,6 @@
 import { REST, Routes } from "discord.js";
 import { ICommandExecutable } from "./types/ICommandExecutable";
+import { info, logError } from "./utils/logger";
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
@@ -12,15 +13,15 @@ const registerCommands = async (commands: {
 			command.command.toJSON()
 		);
 
-		console.log(`Started refreshing application (/) commands.`);
+		info(`Started refreshing application (/) commands.`);
 
 		await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
 			body: parsedCommands,
 		});
 
-		console.log(`Successfully reloaded application (/) commands.`);
+		info(`Successfully reloaded application (/) commands.`);
 	} catch (error) {
-		// And of course, make sure you catch and log any errors!
+		logError("There was an error while registering commands! More info:");
 		console.error(error);
 	}
 };

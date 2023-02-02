@@ -8,7 +8,7 @@ const show_training: ICommandExecutable = {
 		.setName("show-all-training")
 		.setDescription("Shows all training sessions for the week"),
 	execute: async (interaction) => {
-		await interaction.deferReply({ ephemeral: false });
+		await interaction.deferReply({ ephemeral: true });
 
 		if (!global.calendar_cache) {
 			const card = new EmbedBuilder()
