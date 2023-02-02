@@ -22,7 +22,7 @@ global.commands = {
 	[refresh_cache.command.name]: refresh_cache,
 };
 
-(async () => await registerCommands(commands))();
+(async () => await registerCommands(global.commands))();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 

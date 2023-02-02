@@ -9,22 +9,36 @@ const show_training: ICommandExecutable = {
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: false });
 
-		// const embeds = [];
+		if (!global.calendar_cache) {
+			const card = new EmbedBuilder()
+				.setTitle("Error!")
+				.setColor("#FF0000")
+				.setDescription(
+					"Failed to show the calendar. Please try again later or use the `/refresh-cache` command."
+				);
 
-		// global.calendar_cache.forEach((event) => {
-		// 	embeds.push(
-		// 		new EmbedBuilder()
-		// 			.setColor("#0000FE")
-		// 			.setTitle(event.title)
-		// 			.setDescription(event.notes)
-		// 			.setTimestamp(new Date(event.start_dt))
-		// 	);
-		// });
+			interaction.followUp({
+				embeds: [card],
+			});
+			return;
+		}
+
+		if (global.calendar_cache.length === 0) {
+			const card = new EmbedBuilder()
+				.setTitle("No Events Found!")
+				.setColor("#4aaace")
+				.setDescription(
+					"There are no training sessions scheduled for this week."
+				);
+
+			interaction.followUp({
+				embeds: [card],
+			});
+			return;
+		}
 
 		interaction.followUp({
 			embeds: global.calendar_cache.map((event) => {
-				console.dir(event);
-
 				let meta = ``;
 
 				if (
