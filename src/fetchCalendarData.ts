@@ -1,3 +1,4 @@
+import axios from "axios";
 import { TeamUpEvent } from "./types/TeamUpEvent";
 import { info } from "./utils/logger";
 import {
@@ -12,7 +13,7 @@ const fetchCalendarData = async (): Promise<TeamUpEvent[]> => {
 	const wc = firstDayOfWeek(today, 1);
 	const we = lastDayOfWeek(today, 0);
 
-	const data = await fetch(
+	const data = await axios.get<{ events: TeamUpEvent[] }>(
 		"https://api.teamup.com/" +
 			process.env.CALENDAR_KEY +
 			// "/events?startDate=2023-01-30&endDate=2023-02-05&format=markdown",
@@ -21,7 +22,6 @@ const fetchCalendarData = async (): Promise<TeamUpEvent[]> => {
 				wc
 			)}&endDate=${dateToTeamUpFormat(we)}&format=markdown`,
 		{
-			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
 				"Teamup-Token": process.env.TEAMUP_TOKEN,
@@ -29,11 +29,9 @@ const fetchCalendarData = async (): Promise<TeamUpEvent[]> => {
 		}
 	);
 
-	const json = await data.json();
-
 	info("Successfully fetched calendar data");
 
-	return json.events;
+	return data.data.events;
 };
 
 export default fetchCalendarData;
