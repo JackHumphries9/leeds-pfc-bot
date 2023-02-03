@@ -16,7 +16,8 @@ const rsvp: ICommandExecutable = {
 		.setName("rsvp")
 		.setDescription(
 			"Shows the training sessions for the week with RSVP options"
-		),
+		)
+		.setDefaultMemberPermissions(0x8 | 0x20 | 0x200000000),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 

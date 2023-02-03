@@ -9,6 +9,7 @@ import my_training from "./commands/my_training";
 import show_training_for from "./commands/show_training_for";
 import rsvp from "./commands/rsvp";
 import { handleRSVP } from "./handleRSVP";
+import show_rsvp from "./commands/show_rsvp";
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -28,6 +29,7 @@ global.commands = {
 	[refresh_cache.command.name]: refresh_cache,
 	[show_training_for.command.name]: show_training_for,
 	[rsvp.command.name]: rsvp,
+	[show_rsvp.command.name]: show_rsvp,
 };
 
 global.attendance = [];
@@ -63,6 +65,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return;
+	info(`Executing button interaction '${interaction.customId}...'`);
 
 	const command = interaction.customId.split("/")[0];
 
