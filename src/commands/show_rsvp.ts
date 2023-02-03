@@ -11,8 +11,8 @@ const show_rsvp: ICommandExecutable = {
 		.setDefaultMemberPermissions(0x8 | 0x20 | 0x200000000)
 		.addRoleOption((option) =>
 			option
-				.setName("role")
-				.setDescription("The role to show RSVPs for")
+				.setName("team")
+				.setDescription("The team to show RSVPs for")
 				.setRequired(false)
 		) as any,
 
@@ -47,9 +47,28 @@ const show_rsvp: ICommandExecutable = {
 			return;
 		}
 
-		interaction.followUp({
-			embeds: await Promise.all(
+		//@ts-ignore
+		const teamId = interaction.options.getRole("team");
+
+		const embeds = (
+			await Promise.all(
 				global.calendar_cache.map(async (event) => {
+					if (teamId) {
+						var shouldShow = false;
+						event.subcalendar_ids.forEach((id) => {
+							if (
+								config.teamMap[id.toString()].roleId ===
+								teamId.id.toString()
+							) {
+								shouldShow = true;
+							}
+						});
+
+						if (shouldShow === false) {
+							return;
+						}
+					}
+
 					const meta = niceDate(
 						new Date(event.start_dt),
 						new Date(event.end_dt),
@@ -90,7 +109,25 @@ const show_rsvp: ICommandExecutable = {
 								.join(", ")}`,
 						});
 				})
-			),
+			)
+		).filter((event) => event);
+
+		if (embeds.length === 0) {
+			interaction.followUp({
+				embeds: [
+					new EmbedBuilder()
+						.setTitle("No Events Found!")
+						.setColor("#4aaace")
+						.setDescription(
+							"There are no training sessions scheduled for this week."
+						),
+				],
+			});
+			return;
+		}
+
+		interaction.followUp({
+			embeds: embeds,
 		});
 	},
 };
