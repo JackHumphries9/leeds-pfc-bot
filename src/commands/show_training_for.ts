@@ -104,8 +104,9 @@ ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
 							.map((id) =>
 								config.teamMap[id.toString()]
 									? config.teamMap[id.toString()].name
-									: "Unknown"
+									: null
 							)
+							.filter((i) => i)
 							.join(", ")}`,
 					});
 			})
