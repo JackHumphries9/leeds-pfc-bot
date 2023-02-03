@@ -7,6 +7,8 @@ import refresh_cache from "./commands/refresh_cache";
 import { logError, info } from "./utils/logger";
 import my_training from "./commands/my_training";
 import show_training_for from "./commands/show_training_for";
+import rsvp from "./commands/rsvp";
+import { handleRSVP } from "./handleRSVP";
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -25,8 +27,10 @@ global.commands = {
 	[my_training.command.name]: my_training,
 	[refresh_cache.command.name]: refresh_cache,
 	[show_training_for.command.name]: show_training_for,
+	[rsvp.command.name]: rsvp,
 };
 
+global.attendance = [];
 (async () => await registerCommands(global.commands))();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -55,6 +59,21 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			ephemeral: true,
 		});
 	}
+});
+
+client.on(Events.InteractionCreate, async (interaction) => {
+	if (!interaction.isButton()) return;
+
+	const command = interaction.customId.split("/")[0];
+
+	if (command === "rsvp") {
+		return await handleRSVP(interaction);
+	}
+
+	interaction.reply({
+		ephemeral: true,
+		content: "Button pressed! (id: " + interaction.customId + ")",
+	});
 });
 
 client.login(TOKEN);
