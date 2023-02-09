@@ -36,9 +36,10 @@ const handleRSVP = async (
 	calendarEvent.subcalendar_ids.forEach((id) => {
 		if (
 			//@ts-ignore
-			interaction.member.roles.cache.find(
-				(role) =>
-					role.id.toString() === config.teamMap[id.toString()].roleId
+			interaction.member.roles.cache.find((role) =>
+				config.eventMap[id.toString()].roleId.includes(
+					role.id.toString()
+				)
 			)
 		) {
 			canRSVP = true;
@@ -75,11 +76,11 @@ const handleRSVP = async (
 			embeds: [
 				new EmbedBuilder()
 					.setTitle("RSVP")
-					.setColor(att ? "#4caf50" : "#f44336")
+					.setColor("#4caf50")
 					.setDescription(
-						`${att ? "Your attending" : "Your not attending"}: ${
-							calendarEvent.title
-						}!`
+						`${
+							att ? "You are attending" : "You are not attending"
+						}: ${calendarEvent.title}!`
 					),
 			],
 		});
@@ -89,12 +90,12 @@ const handleRSVP = async (
 			embeds: [
 				new EmbedBuilder()
 					.setTitle("RSVP")
-					.setColor(att ? "#4caf50" : "#f44336")
+					.setColor("#4caf50")
 					.setDescription(
 						`Your attendance has been updated! ${
 							att
-								? "Your now attending"
-								: "Your now not attending"
+								? "You are now attending"
+								: "You are now not attending"
 						}: ${calendarEvent.title}!`
 					),
 			],

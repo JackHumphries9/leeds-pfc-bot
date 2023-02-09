@@ -6,8 +6,8 @@ import niceDate from "../utils/niceDate";
 
 const show_rsvp: ICommandExecutable = {
 	command: new SlashCommandBuilder()
-		.setName("show-rsvp")
-		.setDescription("Show the events that have been RSVP'd for")
+		.setName("attendance")
+		.setDescription("Show the attendance for the training sessions")
 		.setDefaultMemberPermissions(0x8 | 0x20 | 0x200000000)
 		.addRoleOption((option) =>
 			option
@@ -57,8 +57,9 @@ const show_rsvp: ICommandExecutable = {
 						var shouldShow = false;
 						event.subcalendar_ids.forEach((id) => {
 							if (
-								config.teamMap[id.toString()].roleId ===
-								teamId.id.toString()
+								config.eventMap[id.toString()].roleId.includes(
+									teamId.id.toString()
+								)
 							) {
 								shouldShow = true;
 							}
@@ -86,14 +87,14 @@ const show_rsvp: ICommandExecutable = {
 						const user = interaction.guild.members.cache.find(
 							(u) => att.userId === u.id
 						);
-						attMeta += `*${user.displayName}* - ${
+						attMeta += `*${user}* - ${
 							att.attending ? "Attending" : "Not Attending"
 						}\n`;
 					});
 
 					return new EmbedBuilder()
 						.setColor(
-							config.teamMap[event.subcalendar_ids[0]].colour ||
+							config.eventMap[event.subcalendar_ids[0]].colour ||
 								("#4aaace" as ColorResolvable)
 						)
 						.setTitle(event.title)
@@ -101,8 +102,8 @@ const show_rsvp: ICommandExecutable = {
 						.setFooter({
 							text: `For: ${event.subcalendar_ids
 								.map((id) =>
-									config.teamMap[id.toString()]
-										? config.teamMap[id.toString()].name
+									config.eventMap[id.toString()]
+										? config.eventMap[id.toString()].name
 										: null
 								)
 								.filter((i) => i)

@@ -7,6 +7,8 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import config from "../config";
+import fetchCalendarData from "../fetchCalendarData";
+import { clearAttendance } from "../services/clearAttendance";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import niceDate from "../utils/niceDate";
 import { firstDayOfWeek } from "../utils/temporal";
@@ -17,9 +19,12 @@ const rsvp: ICommandExecutable = {
 		.setDescription(
 			"Shows the training sessions for the week with RSVP options"
 		)
+
 		.setDefaultMemberPermissions(0x8 | 0x20 | 0x200000000),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
+
+		global.calendar_cache = await fetchCalendarData();
 
 		if (
 			!interaction.memberPermissions.has("Administrator") ||
@@ -76,7 +81,7 @@ const rsvp: ICommandExecutable = {
 				embeds: [
 					new EmbedBuilder()
 						.setColor(
-							config.teamMap[event.subcalendar_ids[0]].colour ||
+							config.eventMap[event.subcalendar_ids[0]].colour ||
 								("#4aaace" as ColorResolvable)
 						)
 						.setTitle(event.title)
@@ -87,8 +92,8 @@ const rsvp: ICommandExecutable = {
 						.setFooter({
 							text: `For: ${event.subcalendar_ids
 								.map((id) =>
-									config.teamMap[id.toString()]
-										? config.teamMap[id.toString()].name
+									config.eventMap[id.toString()]
+										? config.eventMap[id.toString()].name
 										: "Unknown"
 								)
 								.join(", ")}`,
@@ -124,6 +129,8 @@ const rsvp: ICommandExecutable = {
 					.setColor("#4aaace"),
 			],
 		});
+
+		await clearAttendance();
 
 		interaction.followUp({
 			embeds: [

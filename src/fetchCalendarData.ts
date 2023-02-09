@@ -17,10 +17,11 @@ const fetchCalendarData = async (): Promise<TeamUpEvent[]> => {
 		"https://api.teamup.com/" +
 			process.env.CALENDAR_KEY +
 			// "/events?startDate=2023-01-30&endDate=2023-02-05&format=markdown",
-			//"/events?startDate=2023-02-13&endDate=2023-02-19&format=markdown",
-			`/events?startDate=${dateToTeamUpFormat(
-				wc
-			)}&endDate=${dateToTeamUpFormat(we)}&format=markdown`,
+			//			"/events?startDate=2023-02-13&endDate=2023-02-19&format=markdown",
+			"/events?startDate=2023-02-20&endDate=2023-02-26&format=markdown",
+		// `/events?startDate=${dateToTeamUpFormat(
+		// 	wc
+		// )}&endDate=${dateToTeamUpFormat(we)}&format=markdown`,
 		{
 			headers: {
 				"Content-Type": "application/json",

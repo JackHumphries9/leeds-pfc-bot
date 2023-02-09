@@ -1,4 +1,5 @@
 import { ColorResolvable } from "discord.js";
+import { teamUpColorToHex } from "./utils/teamUpColorToHex";
 
 export interface TeamConfig {
 	teamupId: string;
@@ -7,14 +8,11 @@ export interface TeamConfig {
 }
 
 export interface BotConfig {
-	// teams: {
-	// 	[key: string]: TeamConfig;
-	// };
-	teamMap: {
+	eventMap: {
 		[key: string]: {
 			colour: ColorResolvable;
 			name: string;
-			roleId: string;
+			roleId: string[];
 		};
 	};
 	guildId: string;
@@ -23,73 +21,73 @@ export interface BotConfig {
 
 const stage = process.env.STAGE || "dev";
 
+const roleIds = {
+	centurions: "1070298047864643664",
+	chariots: "1070297963928232016",
+	dynamos: "1070298004772376696",
+	spartans: "1070298127942303754",
+	hurricanes: "1070298181767811092",
+	amazons: "1070297928582844517",
+};
+
 const devConfig: BotConfig = {
 	guildId: "1070297374905352253",
 	moderatorId: "1070298227783520297",
-	teamMap: {
+
+	eventMap: {
+		11026484: {
+			colour: teamUpColorToHex(2) as ColorResolvable,
+			name: "Centurions",
+			roleId: [roleIds.centurions],
+		},
 		11026483: {
-			colour: "#f6c811",
+			colour: teamUpColorToHex(36) as ColorResolvable,
 			name: "Chariots",
-			roleId: "1070297963928232016",
+			roleId: [roleIds.chariots],
 		},
 		11026445: {
-			colour: "#8763ca",
+			colour: teamUpColorToHex(15) as ColorResolvable,
 			name: "Dynamos",
-			roleId: "1070298004772376696",
+			roleId: [roleIds.dynamos],
 		},
-		11026484: {
-			colour: "#cf2424",
-			name: "Centurions",
-			roleId: "1070298047864643664",
+		11029974: {
+			colour: teamUpColorToHex(24) as ColorResolvable,
+			name: "Events",
+			roleId: [
+				roleIds.dynamos,
+				roleIds.chariots,
+				roleIds.centurions,
+				roleIds.spartans,
+				roleIds.hurricanes,
+				roleIds.amazons,
+			],
 		},
 		11026485: {
-			colour: "#2951b9",
-			name: "Spartan",
-			roleId: "1070298127942303754",
+			colour: teamUpColorToHex(26) as ColorResolvable,
+			name: "Hurricanes",
+			roleId: [roleIds.hurricanes],
 		},
-		11026486: {
-			colour: "#5a8121",
-			name: "Hurricane",
-			roleId: "1070298181767811092",
+		11029973: {
+			colour: teamUpColorToHex(6) as ColorResolvable,
+			name: "North East/Yorkshire League",
+			roleId: [
+				roleIds.dynamos,
+				roleIds.centurions,
+				roleIds.chariots,
+				roleIds.hurricanes,
+			],
 		},
-		11026487: {
-			colour: "#2951b9",
-			name: "Spartan",
-			roleId: "1070298127942303754",
+		11026444: {
+			colour: teamUpColorToHex(19) as ColorResolvable,
+			name: "Spartans/Amazons",
+			roleId: [roleIds.spartans, roleIds.amazons],
+		},
+		11029970: {
+			colour: teamUpColorToHex(9) as ColorResolvable,
+			name: "WFA National League",
+			roleId: [roleIds.dynamos, roleIds.chariots],
 		},
 	},
-	// teams: {
-	// 	chariots: {
-	// 		teamupId: "11026483",
-	// 		colour: "#f6c811",
-	// 		roleId: "1070297963928232016",
-	// 	},
-	// 	dynamos: {
-	// 		teamupId: "11026445",
-	// 		colour: "#8763ca",
-	// 		roleId: "1070298004772376696",
-	// 	},
-	// 	centurion: {
-	// 		teamupId: "11026484",
-	// 		colour: "#cf2424",
-	// 		roleId: "1070298047864643664",
-	// 	},
-	// 	spartan: {
-	// 		teamupId: "11026483",
-	// 		colour: "#2951b9",
-	// 		roleId: "1070298127942303754",
-	// 	},
-	// 	hurricane: {
-	// 		teamupId: "11026483",
-	// 		colour: "#5a8121",
-	// 		roleId: "1070298181767811092",
-	// 	},
-	// 	amazons: {
-	// 		teamupId: "11026483",
-	// 		colour: "#2951b9",
-	// 		roleId: "1070297928582844517",
-	// 	},
-	// },
 };
 
 const configs: { [key: string]: BotConfig } = {

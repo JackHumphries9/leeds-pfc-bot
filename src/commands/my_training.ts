@@ -1,7 +1,8 @@
 import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
+import { getEventAttendanceForUser } from "../services/getEventAttendanceForUser";
 import { ICommandExecutable } from "../types/ICommandExecutable";
-import { debug } from "../utils/logger";
+import { Attendance } from "../types/UtilTypes";
 import niceDate from "../utils/niceDate";
 
 const my_training: ICommandExecutable = {
@@ -39,55 +40,70 @@ const my_training: ICommandExecutable = {
 			return;
 		}
 
-		const embeds = global.calendar_cache
-			.map((event) => {
-				var shouldShow = false;
+		const embeds = (
+			await Promise.all(
+				global.calendar_cache.map(async (event) => {
+					var shouldShow = false;
 
-				event.subcalendar_ids.forEach((id) => {
-					if (
-						//@ts-ignore
-						interaction.member.roles.cache.find(
-							(role) =>
-								role.id.toString() ===
-								config.teamMap[id.toString()].roleId
-						)
-					) {
-						shouldShow = true;
-					}
-				});
-
-				if (shouldShow === false) {
-					return;
-				}
-
-				const meta = niceDate(
-					new Date(event.start_dt),
-					new Date(event.end_dt),
-					event.all_day
-				);
-
-				return new EmbedBuilder()
-					.setColor(
-						config.teamMap[event.subcalendar_ids[0]].colour ||
-							("#4aaace" as ColorResolvable)
-					)
-					.setTitle(event.title)
-					.setDescription(
-						`**Time**: ${meta}
-${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
-					)
-					.setFooter({
-						text: `For: ${event.subcalendar_ids
-							.map((id) =>
-								config.teamMap[id.toString()]
-									? config.teamMap[id.toString()].name
-									: null
+					event.subcalendar_ids.forEach(async (id) => {
+						if (
+							//@ts-ignore
+							interaction.member.roles.cache.find((role) =>
+								config.eventMap[id.toString()].roleId.includes(
+									role.id.toString()
+								)
 							)
-							.filter((i) => i)
-							.join(", ")}`,
+						) {
+							shouldShow = true;
+						}
 					});
-			})
-			.filter((event) => event);
+
+					if (shouldShow === false) {
+						return;
+					}
+
+					const meta = niceDate(
+						new Date(event.start_dt),
+						new Date(event.end_dt),
+						event.all_day
+					);
+
+					const att: Attendance = await getEventAttendanceForUser(
+						event.id,
+						interaction.user.id
+					);
+
+					return new EmbedBuilder()
+						.setColor(
+							config.eventMap[event.subcalendar_ids[0]].colour ||
+								("#4aaace" as ColorResolvable)
+						)
+						.setTitle(event.title)
+						.setDescription(
+							`**Time**: ${meta}
+${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}
+${
+	att
+		? att.attending
+			? ":white_check_mark: You are attending this event."
+			: ":negative_squared_cross_mark: You are not attending this event."
+		: ":question: You have not RSVP'd to this event."
+}
+`
+						)
+						.setFooter({
+							text: `For: ${event.subcalendar_ids
+								.map((id) =>
+									config.eventMap[id.toString()]
+										? config.eventMap[id.toString()].name
+										: null
+								)
+								.filter((i) => i)
+								.join(", ")}`,
+						});
+				})
+			)
+		).filter((event) => event);
 
 		if (embeds.length === 0) {
 			const card = new EmbedBuilder()
@@ -103,7 +119,9 @@ ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
 			return;
 		}
 
-		interaction.followUp({
+		console.dir(embeds);
+
+		await interaction.followUp({
 			embeds: embeds,
 		});
 	},
