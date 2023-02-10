@@ -19,7 +19,12 @@ const rsvp: ICommandExecutable = {
 		.setDescription(
 			"Shows the training sessions for the week with RSVP options"
 		)
-
+		.addRoleOption((option) => {
+			return option
+				.setName("team")
+				.setDescription("The team to show training sessions for for")
+				.setRequired(false);
+		})
 		.setDefaultMemberPermissions(0x8 | 0x20 | 0x200000000),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
@@ -56,6 +61,9 @@ const rsvp: ICommandExecutable = {
 			return;
 		}
 
+		//@ts-ignore
+		const team = interaction.options.getRole("team");
+
 		if (global.calendar_cache.length === 0) {
 			const card = new EmbedBuilder()
 				.setTitle("No Events Found!")
@@ -76,6 +84,22 @@ const rsvp: ICommandExecutable = {
 				new Date(event.end_dt),
 				event.all_day
 			);
+
+			if (team) {
+				var shouldShow = false;
+				event.subcalendar_ids.forEach((id) => {
+					if (
+						config.eventMap[id.toString()].roleId ===
+						team.id.toString()
+					) {
+						shouldShow = true;
+					}
+				});
+
+				if (shouldShow === false) {
+					return;
+				}
+			}
 
 			interaction.channel.send({
 				embeds: [
