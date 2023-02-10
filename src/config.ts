@@ -22,6 +22,15 @@ export interface BotConfig {
 const stage = process.env.STAGE || "dev";
 
 const roleIds = {
+	centurions: "1064872566067568651",
+	chariots: "1064871845398069258",
+	dynamos: "1064872253319295057",
+	spartans: "1064931662145794128",
+	hurricanes: "1064932406932549834",
+	amazons: "1064931865523392563",
+};
+
+const devRoleIds = {
 	centurions: "1070298047864643664",
 	chariots: "1070297963928232016",
 	dynamos: "1070298004772376696",

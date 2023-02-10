@@ -119,8 +119,6 @@ ${
 			return;
 		}
 
-		console.dir(embeds);
-
 		await interaction.followUp({
 			embeds: embeds,
 		});
