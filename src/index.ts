@@ -10,6 +10,7 @@ import show_training_for from "./commands/show_training_for";
 import rsvp from "./commands/rsvp";
 import { handleRSVP } from "./handleRSVP";
 import show_rsvp from "./commands/show_rsvp";
+import config from "./config";
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -35,7 +36,9 @@ global.commands = {
 global.attendance = [];
 (async () => await registerCommands(global.commands))();
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+});
 
 client.once(Events.ClientReady, async (c) => {
 	info(`Ready! Logged in as ${c.user.tag}`);
@@ -77,6 +80,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		ephemeral: true,
 		content: "Button pressed! (id: " + interaction.customId + ")",
 	});
+});
+
+client.on(Events.GuildMemberAdd, async (member) => {
+	const channel = member.guild.channels.cache.find(
+		(ch) => ch.id === config.welcomeChannelId
+	);
+
+	if (!channel) return;
+
+	// @ts-ignore
+	channel.send(`Welcome to the server, ${member}`);
 });
 
 client.login(TOKEN);
