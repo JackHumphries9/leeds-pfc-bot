@@ -25,7 +25,7 @@ const rsvp: ICommandExecutable = {
 				.setDescription("The team to show training sessions for for")
 				.setRequired(false);
 		})
-		.setDefaultMemberPermissions(0x8 | 0x20 | 0x200000000),
+		.setDefaultMemberPermissions(0x8),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 

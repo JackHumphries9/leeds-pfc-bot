@@ -1,12 +1,10 @@
 import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
-import ping from "./commands/ping";
 import registerCommands from "./registerCommands";
 import fetchCalendarData from "./fetchCalendarData";
 import show_training from "./commands/show_all_training";
 import refresh_cache from "./commands/refresh_cache";
 import { logError, info } from "./utils/logger";
 import my_training from "./commands/my_training";
-import show_training_for from "./commands/show_training_for";
 import rsvp from "./commands/rsvp";
 import { handleRSVP } from "./handleRSVP";
 import show_rsvp from "./commands/show_rsvp";
@@ -24,11 +22,11 @@ if (!CLIENT_ID) {
 }
 
 global.commands = {
-	[ping.command.name]: ping,
+	// [ping.command.name]: ping,
 	[show_training.command.name]: show_training,
 	[my_training.command.name]: my_training,
 	[refresh_cache.command.name]: refresh_cache,
-	[show_training_for.command.name]: show_training_for,
+	// [show_training_for.command.name]: show_training_for,
 	[rsvp.command.name]: rsvp,
 	[show_rsvp.command.name]: show_rsvp,
 };

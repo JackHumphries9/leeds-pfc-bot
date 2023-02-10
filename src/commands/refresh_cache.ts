@@ -6,7 +6,7 @@ const refresh_cache: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("refresh-cache")
 		.setDescription("Refreshes the TeamUp Cache")
-		.setDefaultMemberPermissions(0x8 | 0x20 | 0x200000000)
+		.setDefaultMemberPermissions(0x8)
 		.addBooleanOption((opt) => {
 			opt.setName("data");
 			opt.setDescription("Show the JSON data back from the API");

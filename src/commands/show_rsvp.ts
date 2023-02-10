@@ -8,7 +8,7 @@ const show_rsvp: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("attendance")
 		.setDescription("Show the attendance for the training sessions")
-		.setDefaultMemberPermissions(0x8 | 0x20 | 0x200000000)
+		.setDefaultMemberPermissions(0x8)
 		.addRoleOption((option) =>
 			option
 				.setName("team")
