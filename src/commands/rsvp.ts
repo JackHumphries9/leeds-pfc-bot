@@ -24,29 +24,48 @@ const rsvp: ICommandExecutable = {
 				.setName("team")
 				.setDescription("The team to show training sessions for for")
 				.setRequired(false);
-		})
-		.setDefaultMemberPermissions(0x8),
+		}) as any,
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
 		global.calendar_cache = await fetchCalendarData();
 
+		// if (
+		// 	!interaction.memberPermissions.has("Administrator") ||
+		// 	!interaction.memberPermissions.has("ManageGuild")
+		// ) {
+		// 	interaction.followUp({
+		// 		embeds: [
+		// 			new EmbedBuilder()
+		// 				.setTitle("Error!")
+		// 				.setColor("#FF0000")
+		// 				.setDescription(
+		// 					"You do not have the required permissions to run this command."
+		// 				),
+		// 		],
+		// 	});
+		// 	return;
+		// }
+
 		if (
-			!interaction.memberPermissions.has("Administrator") ||
-			!interaction.memberPermissions.has("ManageGuild")
+			//@ts-ignore
+			!interaction.member.roles.cache.find(
+				(r) => r.id == config.adminRoleId
+			)
 		) {
 			interaction.followUp({
 				embeds: [
 					new EmbedBuilder()
-						.setTitle("Error!")
+						.setTitle("Not admin!")
 						.setColor("#FF0000")
 						.setDescription(
-							"You do not have the required permissions to run this command."
+							"You cannot use this command as you are not an admin."
 						),
 				],
 			});
 			return;
 		}
+
 		if (!global.calendar_cache) {
 			const card = new EmbedBuilder()
 				.setTitle("Error!")

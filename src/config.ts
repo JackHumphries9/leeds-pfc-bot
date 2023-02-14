@@ -16,7 +16,7 @@ export interface BotConfig {
 		};
 	};
 	guildId: string;
-	moderatorId: string;
+	adminRoleId: string;
 	welcomeChannelId: string;
 }
 
@@ -42,7 +42,7 @@ const devRoleIds = {
 
 const devConfig: BotConfig = {
 	guildId: "1070297374905352253",
-	moderatorId: "1070298227783520297",
+	adminRoleId: "1064867500711497743",
 	welcomeChannelId: "1064867501231575119",
 
 	eventMap: {

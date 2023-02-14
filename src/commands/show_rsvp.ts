@@ -8,7 +8,6 @@ const show_rsvp: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("attendance")
 		.setDescription("Show the attendance for the training sessions")
-		.setDefaultMemberPermissions(0x8)
 		.addRoleOption((option) =>
 			option
 				.setName("team")
@@ -18,6 +17,25 @@ const show_rsvp: ICommandExecutable = {
 
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
+
+		if (
+			//@ts-ignore
+			!interaction.member.roles.cache.find(
+				(r) => r.id == config.adminRoleId
+			)
+		) {
+			interaction.followUp({
+				embeds: [
+					new EmbedBuilder()
+						.setTitle("Not admin!")
+						.setColor("#FF0000")
+						.setDescription(
+							"You cannot use this command as you are not an admin."
+						),
+				],
+			});
+			return;
+		}
 
 		if (!global.calendar_cache) {
 			const card = new EmbedBuilder()
