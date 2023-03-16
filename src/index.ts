@@ -1,4 +1,10 @@
-import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
+import {
+	ActivityType,
+	CategoryChannel,
+	Client,
+	Events,
+	GatewayIntentBits,
+} from "discord.js";
 import registerCommands from "./registerCommands";
 import fetchCalendarData from "./fetchCalendarData";
 import show_training from "./commands/show_all_training";
@@ -9,6 +15,11 @@ import rsvp from "./commands/rsvp";
 import { handleRSVP } from "./handleRSVP";
 import show_rsvp from "./commands/show_rsvp";
 import config from "./config";
+import schedule from "node-schedule";
+
+process.on("SIGINT", function () {
+	schedule.gracefulShutdown().then(() => process.exit(0));
+});
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -38,6 +49,14 @@ const client = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
 });
 
+// Setup automatic cache refresh
+const rule = new schedule.RecurrenceRule();
+rule.dayOfWeek = 0;
+
+const job = schedule.scheduleJob(rule, async () => {
+	global.calendar_cache = await fetchCalendarData();
+});
+
 client.once(Events.ClientReady, async (c) => {
 	info(`Ready! Logged in as ${c.user.tag}`);
 	c.user.setActivity("Powerchair Football", { type: ActivityType.Playing });
@@ -55,8 +74,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		info(`Executing command '${interaction.commandName}...'`);
 		await command.execute(interaction);
 	} catch (error) {
-		logError("There was an error while executing this command! More info:");
-		console.error(error);
+		logError(
+			"There was an error while executing this command! More info:",
+			error
+		);
+
 		await interaction.reply({
 			content: "There was an error while executing this command!",
 			ephemeral: true,

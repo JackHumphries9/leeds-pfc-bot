@@ -8,8 +8,9 @@ export const warn = (message: string) => {
 	console.log(chalk.yellow("[WARN] ") + message);
 };
 
-export const logError = (message: string) => {
+export const logError = (message: string, err: Error | any) => {
 	console.log(chalk.red("[ERROR] ") + message);
+	if (err) console.error(err);
 };
 
 export const debug = (message: string) => {
