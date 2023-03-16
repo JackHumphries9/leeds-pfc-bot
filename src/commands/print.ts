@@ -46,7 +46,7 @@ const print: ICommandExecutable = {
 		// @ts-ignore
 		if (interaction.options.getSubcommand() === "socials") {
 			const card = new EmbedBuilder()
-				.setTitle("Leeds Powerchair Football Club Social Media")
+				.setTitle("LPFC Socials")
 				.setColor("#4aaace")
 				.setDescription(`Check out some of the links below!`);
 
@@ -90,14 +90,14 @@ const print: ICommandExecutable = {
 			const card = new EmbedBuilder()
 				.setTitle("LPFC Bot Help")
 				.setDescription(
-					`Hello! I'm the Leeds Powerchair Football Club Bot! I'm here to help you with all your LPFC needs! I can do a lot of things, but here are some of the things I can do:`
+					`Hello! I'm the Leeds Powerchair Football Club Bot! I'm here to help you with all your LPFC needs! I can do a lot of things, but here are some of the main things I can do:`
 				)
 				.setColor("#4aaace");
 
 			const stCard = new EmbedBuilder()
 				.setTitle("Show your training sessions")
 				.setDescription(
-					"To view your training sessions for the week, just type `/training` and I'll show you your training sessions for the week! Try it anywhere!"
+					"To view your training sessions, just type `/training` and I'll show you your training sessions for the week! Try it in any channel!"
 				)
 				.setImage(
 					"https://jhresources.ams3.digitaloceanspaces.com/lpfc/bot/tutorial-training-command.gif"
@@ -107,7 +107,7 @@ const print: ICommandExecutable = {
 			const atCard = new EmbedBuilder()
 				.setTitle("Confirm your attendance")
 				.setDescription(
-					`To confirm your attendance for a training session, just head over to the <#${config.tdChannelId}> channel and select whether you can or cannot attend for each of your training sessions.`
+					`To confirm your attendance to a training session, just head over to the <#${config.tdChannelId}> channel and select whichever ones you can or cannot attend.`
 				)
 				.setImage(
 					"https://jhresources.ams3.digitaloceanspaces.com/lpfc/bot/tutorial-attendance.gif"
