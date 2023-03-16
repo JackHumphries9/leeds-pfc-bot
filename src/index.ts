@@ -1,10 +1,4 @@
-import {
-	ActivityType,
-	CategoryChannel,
-	Client,
-	Events,
-	GatewayIntentBits,
-} from "discord.js";
+import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import registerCommands from "./registerCommands";
 import fetchCalendarData from "./fetchCalendarData";
 import show_training from "./commands/show_all_training";
@@ -13,9 +7,10 @@ import { logError, info } from "./utils/logger";
 import my_training from "./commands/my_training";
 import rsvp from "./commands/rsvp";
 import { handleRSVP } from "./handleRSVP";
-import show_rsvp from "./commands/show_rsvp";
+import attendance from "./commands/attendance";
 import config from "./config";
 import schedule from "node-schedule";
+import { LocalRepository } from "./repositories/localRepository";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -32,6 +27,7 @@ if (!CLIENT_ID) {
 	throw new Error("No client id provided");
 }
 
+// Set globals
 global.commands = {
 	// [ping.command.name]: ping,
 	[show_training.command.name]: show_training,
@@ -39,10 +35,11 @@ global.commands = {
 	[refresh_cache.command.name]: refresh_cache,
 	// [show_training_for.command.name]: show_training_for,
 	[rsvp.command.name]: rsvp,
-	[show_rsvp.command.name]: show_rsvp,
+	[attendance.command.name]: attendance,
 };
 
-global.attendance = [];
+global.repository = new LocalRepository();
+
 (async () => await registerCommands(global.commands))();
 
 const client = new Client({
@@ -103,14 +100,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 client.on(Events.GuildMemberAdd, async (member) => {
-	const channel = member.guild.channels.cache.find(
+	const channel: any = member.guild.channels.cache.find(
 		(ch) => ch.id === config.welcomeChannelId
 	);
 
 	if (!channel) return;
 
-	// @ts-ignore
-	channel.send(`Welcome to the server, ${member}`);
+	channel.send(`Welcome to the server, ${member}!`);
 });
 
 client.login(TOKEN);

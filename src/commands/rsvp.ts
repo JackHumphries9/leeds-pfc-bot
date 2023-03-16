@@ -8,7 +8,6 @@ import {
 } from "discord.js";
 import config from "../config";
 import fetchCalendarData from "../fetchCalendarData";
-import { clearAttendance } from "../services/clearAttendance";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import niceDate from "../utils/niceDate";
 import { firstDayOfWeek } from "../utils/temporal";
@@ -24,11 +23,26 @@ const rsvp: ICommandExecutable = {
 				.setName("team")
 				.setDescription("The team to show training sessions for for")
 				.setRequired(false);
+		})
+		.addBooleanOption((option) => {
+			return option
+				.setName("refresh")
+				.setDescription("Refresh the callendar")
+				.setRequired(false);
+		})
+		.addBooleanOption((option) => {
+			return option
+				.setName("clear")
+				.setDescription("Clear the attendance")
+				.setRequired(false);
 		}) as any,
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
-		global.calendar_cache = await fetchCalendarData();
+		// @ts-ignore
+		if (interaction.options.getBoolean("refresh")) {
+			global.calendar_cache = await fetchCalendarData();
+		}
 
 		// if (
 		// 	!interaction.memberPermissions.has("Administrator") ||
@@ -173,7 +187,10 @@ const rsvp: ICommandExecutable = {
 			],
 		});
 
-		await clearAttendance();
+		// @ts-ignore
+		if (interaction.options.getBoolean("clear")) {
+			await global.repository.clearAttendance();
+		}
 
 		interaction.followUp({
 			embeds: [

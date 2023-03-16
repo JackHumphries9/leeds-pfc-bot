@@ -42,6 +42,67 @@ const devRoleIds = {
 
 const devConfig: BotConfig = {
 	guildId: "1070297374905352253",
+	adminRoleId: "1070298227783520297",
+	welcomeChannelId: "1070297375400271954",
+
+	eventMap: {
+		11026484: {
+			colour: teamUpColorToHex(2) as ColorResolvable,
+			name: "Centurions",
+			roleId: [devRoleIds.centurions],
+		},
+		11026483: {
+			colour: teamUpColorToHex(36) as ColorResolvable,
+			name: "Chariots",
+			roleId: [devRoleIds.chariots],
+		},
+		11026445: {
+			colour: teamUpColorToHex(15) as ColorResolvable,
+			name: "Dynamos",
+			roleId: [devRoleIds.dynamos],
+		},
+		11029974: {
+			colour: teamUpColorToHex(24) as ColorResolvable,
+			name: "Events",
+			roleId: [
+				devRoleIds.dynamos,
+				devRoleIds.chariots,
+				devRoleIds.centurions,
+				devRoleIds.spartans,
+				devRoleIds.hurricanes,
+				devRoleIds.amazons,
+			],
+		},
+		11026485: {
+			colour: teamUpColorToHex(26) as ColorResolvable,
+			name: "Hurricanes",
+			roleId: [devRoleIds.hurricanes],
+		},
+		11029973: {
+			colour: teamUpColorToHex(6) as ColorResolvable,
+			name: "North East/Yorkshire League",
+			roleId: [
+				devRoleIds.dynamos,
+				devRoleIds.centurions,
+				devRoleIds.chariots,
+				devRoleIds.hurricanes,
+			],
+		},
+		11026444: {
+			colour: teamUpColorToHex(19) as ColorResolvable,
+			name: "Spartans/Amazons",
+			roleId: [devRoleIds.spartans, devRoleIds.amazons],
+		},
+		11029970: {
+			colour: teamUpColorToHex(9) as ColorResolvable,
+			name: "WFA National League",
+			roleId: [devRoleIds.dynamos, devRoleIds.chariots],
+		},
+	},
+};
+
+const prodConfig: BotConfig = {
+	guildId: "1064867500711497738",
 	adminRoleId: "1064867500711497743",
 	welcomeChannelId: "1064867501231575119",
 
@@ -103,6 +164,7 @@ const devConfig: BotConfig = {
 
 const configs: { [key: string]: BotConfig } = {
 	dev: devConfig,
+	prod: prodConfig,
 };
 
 export default configs[stage];

@@ -1,8 +1,8 @@
 import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
-import { getEventAttendanceForUser } from "../services/getEventAttendanceForUser";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { Attendance } from "../types/UtilTypes";
+import { debug } from "../utils/logger";
 import niceDate from "../utils/niceDate";
 
 const my_training: ICommandExecutable = {
@@ -68,10 +68,11 @@ const my_training: ICommandExecutable = {
 						event.all_day
 					);
 
-					const att: Attendance = await getEventAttendanceForUser(
-						event.id,
-						interaction.user.id
-					);
+					const att: Attendance =
+						await global.repository.getEventAttendanceForUser(
+							event.id,
+							interaction.user.id
+						);
 
 					return new EmbedBuilder()
 						.setColor(

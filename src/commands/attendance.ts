@@ -1,10 +1,9 @@
 import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
-import { getAttendanceFromEventId } from "../services/getAttendance";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import niceDate from "../utils/niceDate";
 
-const show_rsvp: ICommandExecutable = {
+const attendance: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("attendance")
 		.setDescription("Show the attendance for the training sessions")
@@ -93,7 +92,10 @@ const show_rsvp: ICommandExecutable = {
 						new Date(event.end_dt),
 						event.all_day
 					);
-					const attendance = await getAttendanceFromEventId(event.id);
+					const attendance =
+						await global.repository.getAttendanceFromEventId(
+							event.id
+						);
 
 					var attMeta = `\n**RSVP**:\n`;
 
@@ -151,4 +153,4 @@ const show_rsvp: ICommandExecutable = {
 	},
 };
 
-export default show_rsvp;
+export default attendance;

@@ -1,6 +1,5 @@
 import { ButtonInteraction, CacheType, EmbedBuilder } from "discord.js";
 import config from "./config";
-import { attendance } from "./services/attendance";
 import { debug } from "./utils/logger";
 
 const handleRSVP = async (
@@ -64,7 +63,11 @@ const handleRSVP = async (
 		throw new Error("Invalid state");
 	}
 
-	const dbUpdate = await attendance(interaction.user.id, id, att);
+	const dbUpdate = await global.repository.setAttendance(
+		interaction.user.id,
+		id,
+		att
+	);
 
 	debug(`${dbUpdate.updated}`);
 
