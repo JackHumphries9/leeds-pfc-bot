@@ -1,17 +1,20 @@
 import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import registerCommands from "./registerCommands";
 import fetchCalendarData from "./fetchCalendarData";
-import show_training from "./commands/show_all_training";
-import refresh_cache from "./commands/refresh_cache";
 import { logError, info } from "./utils/logger";
-import my_training from "./commands/my_training";
-import rsvp from "./commands/rsvp";
 import { handleRSVP } from "./handleRSVP";
-import attendance from "./commands/attendance";
 import config from "./config";
 import schedule from "node-schedule";
 import { LocalRepository } from "./repositories/localRepository";
 import { RedisRepository } from "./repositories/redisRepository";
+import {
+	attendance,
+	debug_command,
+	my_training,
+	refresh_cache,
+	rsvp,
+	show_training,
+} from "./commands";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -37,6 +40,7 @@ global.commands = {
 	// [show_training_for.command.name]: show_training_for,
 	[rsvp.command.name]: rsvp,
 	[attendance.command.name]: attendance,
+	[debug_command.command.name]: debug_command,
 };
 
 //global.repository = new LocalRepository();

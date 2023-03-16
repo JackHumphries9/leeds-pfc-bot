@@ -88,4 +88,16 @@ export class RedisRepository extends Repository {
 
 		return { updated: false };
 	}
+
+	async getAllAttendance(): Promise<Attendance[]> {
+		const attendanceStr = await this.db.get(this.key);
+
+		if (!attendanceStr) {
+			return [];
+		}
+
+		const attendance = JSON.parse(attendanceStr) as Attendance[];
+
+		return attendance;
+	}
 }

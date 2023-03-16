@@ -7,7 +7,7 @@ const show_training_for: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("show-training-for")
 		.setDescription("Shows your training sessions for the week")
-		.setDefaultMemberPermissions(0x8)
+		.setDefaultMemberPermissions(0x20)
 		.addRoleOption((option) =>
 			option
 				.setName("team")

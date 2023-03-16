@@ -24,4 +24,8 @@ export abstract class Repository {
 	): Promise<{ updated: boolean }> {
 		throw new Error("Method not implemented.");
 	}
+
+	async getAllAttendance(): Promise<Attendance[]> {
+		throw new Error("Method not implemented.");
+	}
 }
