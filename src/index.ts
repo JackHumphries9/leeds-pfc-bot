@@ -35,10 +35,10 @@ if (!CLIENT_ID) {
 // Set globals
 global.commands = {
 	// [ping.command.name]: ping,
+	// [show_training_for.command.name]: show_training_for,
 	[show_training.command.name]: show_training,
 	[my_training.command.name]: my_training,
 	[refresh_cache.command.name]: refresh_cache,
-	// [show_training_for.command.name]: show_training_for,
 	[rsvp.command.name]: rsvp,
 	[attendance.command.name]: attendance,
 	[debug_command.command.name]: debug_command,

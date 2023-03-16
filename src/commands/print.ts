@@ -90,17 +90,39 @@ const print: ICommandExecutable = {
 			const card = new EmbedBuilder()
 				.setTitle("LPFC Bot Help")
 				.setDescription(
-					`Hello! I'm the Leeds Powerchair Football Club Bot! I'm here to help you with all your LPFC needs! I can do a lot of things, but here are some of the things I can do:\n
-**Show your training sessions**
-To view your training sessions for the week, just type \`/training\` and I'll show you your training sessions for the week! Try it anywhere!\n
-**Confirm your attendance**
-To confirm your attendance for a training session, just head over to the <#${config.tdChannelId}> channel and select whether you can or cannot attend for each of your training sessions.\n
-I am not yet sentient so I cannot answer any questions. If you do have any questions, please contact <@!438350665430073345> and he will be happy to help you!`
+					`Hello! I'm the Leeds Powerchair Football Club Bot! I'm here to help you with all your LPFC needs! I can do a lot of things, but here are some of the things I can do:`
+				)
+				.setColor("#4aaace");
+
+			const stCard = new EmbedBuilder()
+				.setTitle("Show your training sessions")
+				.setDescription(
+					"To view your training sessions for the week, just type `/training` and I'll show you your training sessions for the week! Try it anywhere!"
+				)
+				.setImage(
+					"https://jhresources.ams3.digitaloceanspaces.com/lpfc/bot/tutorial-training-command.gif"
+				)
+				.setColor("#4aaace");
+
+			const atCard = new EmbedBuilder()
+				.setTitle("Confirm your attendance")
+				.setDescription(
+					`To confirm your attendance for a training session, just head over to the <#${config.tdChannelId}> channel and select whether you can or cannot attend for each of your training sessions.`
+				)
+				.setImage(
+					"https://jhresources.ams3.digitaloceanspaces.com/lpfc/bot/tutorial-attendance.gif"
+				)
+				.setColor("#4aaace");
+
+			const sCard = new EmbedBuilder()
+				.setTitle("Any Questions?")
+				.setDescription(
+					`I am not yet sentient so I cannot answer any questions. If you do have any questions, please contact <@!438350665430073345> and he will be happy to help you!`
 				)
 				.setColor("#4aaace");
 
 			interaction.channel.send({
-				embeds: [card],
+				embeds: [card, stCard, atCard, sCard],
 			});
 
 			interaction.followUp("Okie Dokie!");
