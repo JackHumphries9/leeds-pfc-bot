@@ -9,8 +9,9 @@ import {
 } from "redis";
 import { redisConnect } from "./redisConnect";
 
-export class LocalRepository extends Repository {
+export class RedisRepository extends Repository {
 	private db: RedisClientType<RedisModules, RedisFunctions, RedisScripts>;
+	private readonly key = "attendance";
 
 	constructor() {
 		super();
@@ -24,14 +25,30 @@ export class LocalRepository extends Repository {
 	}
 
 	async getAttendanceFromEventId(eventId: string): Promise<Attendance[]> {
-		throw new Error("Method not implemented.");
+		const attendanceStr = await this.db.get(this.key);
+
+		if (!attendanceStr) {
+			return [];
+		}
+
+		const attendance = JSON.parse(attendanceStr) as Attendance[];
+		return attendance.filter((a) => a.eventId === eventId);
 	}
 
 	async getEventAttendanceForUser(
 		eventId: string,
 		userId: string
 	): Promise<Attendance> {
-		throw new Error("Method not implemented.");
+		const attendanceStr = await this.db.get(this.key);
+
+		if (!attendanceStr) {
+			return undefined;
+		}
+
+		const attendance = JSON.parse(attendanceStr) as Attendance[];
+		return attendance.find(
+			(a) => a.eventId === eventId && a.userId === userId
+		);
 	}
 
 	async setAttendance(
@@ -39,6 +56,36 @@ export class LocalRepository extends Repository {
 		eventId: string,
 		attending: boolean
 	): Promise<{ updated: boolean }> {
-		throw new Error("Method not implemented.");
+		const attendanceStr = await this.db.get(this.key);
+
+		let attendance: Attendance[];
+
+		if (!attendanceStr) {
+			attendance = [];
+		} else {
+			attendance = JSON.parse(attendanceStr) as Attendance[];
+		}
+
+		const update = attendance.findIndex(
+			(a) => a.userId === userId && a.eventId === eventId
+		);
+
+		if (update !== -1) {
+			attendance[update] = {
+				...attendance[update],
+				attending: attending,
+			};
+			await this.db.set(this.key, JSON.stringify(attendance));
+			return { updated: true };
+		}
+
+		attendance.push({
+			userId: userId,
+			eventId: eventId,
+			attending: attending,
+		});
+		await this.db.set(this.key, JSON.stringify(attendance));
+
+		return { updated: false };
 	}
 }

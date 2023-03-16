@@ -1,5 +1,5 @@
 import { createClient } from "@redis/client";
-import { logError } from "../utils/logger";
+import { info, logError } from "../utils/logger";
 
 export const redisConnect = async () => {
 	const RURL = process.env.REDIS_URL;
@@ -18,6 +18,8 @@ export const redisConnect = async () => {
 	});
 
 	await client.connect();
+
+	info("Connected to redis");
 
 	return client;
 };

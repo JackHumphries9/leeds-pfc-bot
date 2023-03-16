@@ -11,6 +11,7 @@ import attendance from "./commands/attendance";
 import config from "./config";
 import schedule from "node-schedule";
 import { LocalRepository } from "./repositories/localRepository";
+import { RedisRepository } from "./repositories/redisRepository";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -38,7 +39,8 @@ global.commands = {
 	[attendance.command.name]: attendance,
 };
 
-global.repository = new LocalRepository();
+//global.repository = new LocalRepository();
+global.repository = new RedisRepository();
 
 (async () => await registerCommands(global.commands))();
 
