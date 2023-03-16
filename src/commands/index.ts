@@ -4,6 +4,7 @@ import my_training from "./my_training";
 import refresh_cache from "./refresh_cache";
 import rsvp from "./rsvp";
 import show_training from "./show_all_training";
+import print from "./print";
 
 export {
 	attendance,
@@ -12,4 +13,5 @@ export {
 	refresh_cache,
 	rsvp,
 	show_training,
+	print,
 };

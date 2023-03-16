@@ -14,6 +14,7 @@ import {
 	refresh_cache,
 	rsvp,
 	show_training,
+	print,
 } from "./commands";
 
 process.on("SIGINT", function () {
@@ -41,6 +42,7 @@ global.commands = {
 	[rsvp.command.name]: rsvp,
 	[attendance.command.name]: attendance,
 	[debug_command.command.name]: debug_command,
+	[print.command.name]: print,
 };
 
 //global.repository = new LocalRepository();
