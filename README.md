@@ -27,6 +27,8 @@
 
 After having a chat with the Leeds Powerchair Football Club coaches, I decided to make a bot for the Discord server. The bot uses the [TeamUp](https://teamup.com/) API in order to get the current weeks training sessions from the club's calendar and then posts them to the Discord server. Users can also confirm their attendance to the training sessions using the bot.
 
+![Demo of the Bot](https://jhresources.ams3.digitaloceanspaces.com/lpfc/bot/tutorial-attendance.gif)
+
 ### Built With
 
 -   [Discord.js](https://github.com/discordjs/discord.js)
