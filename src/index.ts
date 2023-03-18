@@ -1,4 +1,14 @@
-import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
+import {
+	ActionRowBuilder,
+	ActivityType,
+	ButtonBuilder,
+	ButtonStyle,
+	Client,
+	ColorResolvable,
+	EmbedBuilder,
+	Events,
+	GatewayIntentBits,
+} from "discord.js";
 import registerCommands from "./registerCommands";
 import fetchCalendarData from "./fetchCalendarData";
 import { logError, info } from "./utils/logger";
@@ -16,6 +26,8 @@ import {
 	show_training,
 	print,
 } from "./commands";
+import niceDate from "./utils/niceDate";
+import { firstDayOfWeek } from "./utils/temporal";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -57,9 +69,108 @@ const client = new Client({
 // Setup automatic cache refresh
 const rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = 0;
+rule.hour = 9;
 
 const job = schedule.scheduleJob(rule, async () => {
 	global.calendar_cache = await fetchCalendarData();
+
+	info("Cache refreshed");
+
+	client.channels.cache
+		.find((c) => c.id === config.tdChannelId)
+		// @ts-ignore
+		?.send({});
+
+	if (global.calendar_cache.length === 0) {
+		const card = new EmbedBuilder()
+			.setTitle("No Events Found!")
+			.setColor("#4aaace")
+			.setDescription(
+				"There are no training sessions scheduled for this week."
+			);
+
+		client.channels.cache
+			.find((c) => c.id === config.tdChannelId)
+			// @ts-ignore
+			?.send({
+				embeds: [card],
+			});
+		return;
+	}
+
+	global.calendar_cache.map((event) => {
+		const meta = niceDate(
+			new Date(event.start_dt),
+			new Date(event.end_dt),
+			event.all_day
+		);
+
+		client.channels.cache
+			.find((c) => c.id === config.tdChannelId)
+			// @ts-ignore
+			?.send({
+				embeds: [
+					new EmbedBuilder()
+						.setColor(
+							config.eventMap[event.subcalendar_ids[0]].colour ||
+								("#4aaace" as ColorResolvable)
+						)
+						.setTitle(event.title)
+						.setDescription(
+							`**Time**: ${meta}
+${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
+						)
+						.setFooter({
+							text: `For: ${event.subcalendar_ids
+								.map((id) =>
+									config.eventMap[id.toString()]
+										? config.eventMap[id.toString()].name
+										: "Unknown"
+								)
+								.join(", ")}`,
+						}),
+				],
+				components: [
+					new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId(`rsvp/${event.id}?ok`)
+							.setLabel("I can attend!")
+							.setStyle(ButtonStyle.Success),
+						new ButtonBuilder()
+							.setCustomId(`rsvp/${event.id}?notok`)
+							.setLabel("I cannot attend!")
+							.setStyle(ButtonStyle.Danger)
+					) as any,
+				],
+			});
+	});
+
+	client.channels.cache
+		.find((c) => c.id === config.tdChannelId)
+		// @ts-ignore
+		?.send({
+			embeds: [
+				new EmbedBuilder()
+					.setTitle("Training Sessions")
+					.setDescription(
+						`Here are the training sessions for this week (WC: ${firstDayOfWeek(
+							new Date(),
+							1
+						).toLocaleDateString("en-GB", {
+							dateStyle: "short",
+						})}). Please RSVP to the ones you can attend.`
+					)
+					.setColor("#4aaace"),
+			],
+			components: [
+				new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId(`command/attendance`)
+						.setLabel("Show Attendance")
+						.setStyle(ButtonStyle.Secondary)
+				) as any,
+			],
+		});
 });
 
 client.once(Events.ClientReady, async (c) => {
@@ -99,6 +210,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (command === "rsvp") {
 		return await handleRSVP(interaction);
+	}
+
+	if (command === "command") {
+		if (interaction.customId === "command/attendance") {
+			return await attendance.execute(interaction as any);
+		}
 	}
 
 	interaction.reply({

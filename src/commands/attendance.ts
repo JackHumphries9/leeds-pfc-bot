@@ -65,27 +65,27 @@ const attendance: ICommandExecutable = {
 		}
 
 		//@ts-ignore
-		const teamId = interaction.options.getRole("team");
+		//const teamId = interaction.options.getRole("team");
 
 		const embeds = (
 			await Promise.all(
 				global.calendar_cache.map(async (event) => {
-					if (teamId) {
-						var shouldShow = false;
-						event.subcalendar_ids.forEach((id) => {
-							if (
-								config.eventMap[id.toString()].roleId.includes(
-									teamId.id.toString()
-								)
-							) {
-								shouldShow = true;
-							}
-						});
+					// if (teamId) {
+					// 	var shouldShow = false;
+					// 	event.subcalendar_ids.forEach((id) => {
+					// 		if (
+					// 			config.eventMap[id.toString()].roleId.includes(
+					// 				teamId.id.toString()
+					// 			)
+					// 		) {
+					// 			shouldShow = true;
+					// 		}
+					// 	});
 
-						if (shouldShow === false) {
-							return;
-						}
-					}
+					// 	if (shouldShow === false) {
+					// 		return;
+					// 	}
+					// }
 
 					const meta = niceDate(
 						new Date(event.start_dt),

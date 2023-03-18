@@ -186,6 +186,14 @@ const rsvp: ICommandExecutable = {
 					)
 					.setColor("#4aaace"),
 			],
+			components: [
+				new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId(`command/attendance`)
+						.setLabel("Show Attendance")
+						.setStyle(ButtonStyle.Secondary)
+				) as any,
+			],
 		});
 
 		// @ts-ignore
