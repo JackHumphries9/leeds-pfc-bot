@@ -31,7 +31,6 @@ export const showRSVP = async (channel: TextChannel) => {
 			new Date(event.end_dt),
 			event.all_day
 		);
-
 		await channel.send({
 			embeds: [
 				new EmbedBuilder()

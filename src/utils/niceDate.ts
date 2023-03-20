@@ -1,31 +1,17 @@
 const niceDate = (start: Date, end: Date, all_day?: boolean) => {
+	const st = start.getTime() / 1000;
+	const et = end.getTime() / 1000;
+
 	if (start.getDay() === end.getDay()) {
 		if (all_day) {
-			return `${start.toLocaleDateString("en-GB", {
-				dateStyle: "full",
-			})}`;
+			return `<t:${st}:D>`;
 		}
-		return `${start.toLocaleString("en-GB", {
-			dateStyle: "full",
-			timeStyle: "short",
-		})} till ${end.toLocaleTimeString("en-GB", {
-			timeStyle: "short",
-		})}`;
+		return `<t:${st}:F> till <t:${et}:t>`;
 	}
 	if (all_day) {
-		return `${start.toLocaleDateString("en-GB", {
-			dateStyle: "full",
-		})} till ${end.toLocaleDateString("en-GB", {
-			dateStyle: "full",
-		})}`;
+		return `<t:${st}:D> till <t:${et}:D>`;
 	}
-	return `${start.toLocaleString("en-GB", {
-		dateStyle: "full",
-		timeStyle: "short",
-	})} till ${end.toLocaleString("en-GB", {
-		dateStyle: "full",
-		timeStyle: "short",
-	})}`;
+	return `<t:${st}:F> till <t:${et}:F>`;
 };
 
 export default niceDate;
