@@ -3,11 +3,13 @@ import {
 	ActivityType,
 	ButtonBuilder,
 	ButtonStyle,
+	CategoryChannel,
 	Client,
 	ColorResolvable,
 	EmbedBuilder,
 	Events,
 	GatewayIntentBits,
+	TextChannel,
 } from "discord.js";
 import registerCommands from "./registerCommands";
 import fetchCalendarData from "./fetchCalendarData";
@@ -28,6 +30,7 @@ import {
 } from "./commands";
 import niceDate from "./utils/niceDate";
 import { firstDayOfWeek } from "./utils/temporal";
+import { showRSVP } from "./showRSVP";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -72,115 +75,53 @@ rule.dayOfWeek = 0;
 rule.hour = 9;
 
 const job = schedule.scheduleJob(rule, async () => {
+	info("Starting Scheduled Job");
+
 	global.calendar_cache = await fetchCalendarData();
 
 	info("Cache refreshed");
+	info("Finding channel");
 
-	client.channels.cache
-		.find((c) => c.id === config.tdChannelId)
-		// @ts-ignore
-		?.send({});
+	const ch = client.channels.cache.find(
+		(c) => c.id === config.tdChannelId
+	) as TextChannel;
 
-	if (global.calendar_cache.length === 0) {
-		const card = new EmbedBuilder()
-			.setTitle("No Events Found!")
-			.setColor("#4aaace")
-			.setDescription(
-				"There are no training sessions scheduled for this week."
-			);
-
-		client.channels.cache
-			.find((c) => c.id === config.tdChannelId)
-			// @ts-ignore
-			?.send({
-				embeds: [card],
-			});
+	if (!ch) {
+		logError("Channel not found");
 		return;
 	}
 
-	global.calendar_cache.map((event) => {
-		const meta = niceDate(
-			new Date(event.start_dt),
-			new Date(event.end_dt),
-			event.all_day
-		);
+	// Clear channel
+	info("Channel found - clearing");
 
-		client.channels.cache
-			.find((c) => c.id === config.tdChannelId)
-			// @ts-ignore
-			?.send({
-				embeds: [
-					new EmbedBuilder()
-						.setColor(
-							config.eventMap[event.subcalendar_ids[0]].colour ||
-								("#4aaace" as ColorResolvable)
-						)
-						.setTitle(event.title)
-						.setDescription(
-							`**Time**: ${meta}
-${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
-						)
-						.setFooter({
-							text: `For: ${event.subcalendar_ids
-								.map((id) =>
-									config.eventMap[id.toString()]
-										? config.eventMap[id.toString()].name
-										: "Unknown"
-								)
-								.join(", ")}`,
-						}),
-				],
-				components: [
-					new ActionRowBuilder().addComponents(
-						new ButtonBuilder()
-							.setCustomId(`rsvp/${event.id}?ok`)
-							.setLabel("I can attend!")
-							.setStyle(ButtonStyle.Success),
-						new ButtonBuilder()
-							.setCustomId(`rsvp/${event.id}?notok`)
-							.setLabel("I cannot attend!")
-							.setStyle(ButtonStyle.Danger)
-					) as any,
-				],
-			});
+	const messages = await ch.messages.fetch();
+	messages.map((m) => m.delete());
+
+	info("Channel cleared, sending new messages");
+
+	showRSVP(ch).then(() => {
+		info("Job complete");
 	});
-
-	client.channels.cache
-		.find((c) => c.id === config.tdChannelId)
-		// @ts-ignore
-		?.send({
-			embeds: [
-				new EmbedBuilder()
-					.setTitle("Training Sessions")
-					.setDescription(
-						`Here are the training sessions for this week (WC: ${firstDayOfWeek(
-							new Date(),
-							1
-						).toLocaleDateString("en-GB", {
-							dateStyle: "short",
-						})}). Please RSVP to the ones you can attend.`
-					)
-					.setColor("#4aaace"),
-			],
-			components: [
-				new ActionRowBuilder().addComponents(
-					new ButtonBuilder()
-						.setCustomId(`command/attendance`)
-						.setLabel("Show Attendance")
-						.setStyle(ButtonStyle.Secondary)
-				) as any,
-			],
-		});
 });
 
 client.once(Events.ClientReady, async (c) => {
 	info(`Ready! Logged in as ${c.user.tag}`);
 	c.user.setActivity("Powerchair Football", { type: ActivityType.Playing });
 	global.calendar_cache = await fetchCalendarData();
+	//job.invoke();
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isCommand()) return;
+
+	if (interaction.commandName === "rsvp") {
+		await interaction.deferReply({ ephemeral: true });
+		job.invoke();
+		await interaction.editReply({
+			content: "RSVP updated!",
+		});
+		return;
+	}
 
 	const command = global.commands[interaction.commandName];
 

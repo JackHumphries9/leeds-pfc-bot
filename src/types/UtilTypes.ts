@@ -1,3 +1,4 @@
+import { Job } from "node-schedule";
 import { RedisFunctions, RedisModules, RedisScripts } from "redis";
 import { RedisClientType } from "redis";
 import { Repository } from "../repositories/repository";
@@ -14,4 +15,5 @@ declare global {
 	var commands: { [key: string]: ICommandExecutable };
 	var redis: RedisClientType<RedisModules, RedisFunctions, RedisScripts>;
 	var repository: Repository;
+	var job: Job;
 }
