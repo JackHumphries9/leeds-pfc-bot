@@ -1,16 +1,5 @@
-import {
-	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonStyle,
-	ColorResolvable,
-	EmbedBuilder,
-	SlashCommandBuilder,
-} from "discord.js";
-import config from "../config";
-import fetchCalendarData from "../fetchCalendarData";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { ICommandExecutable } from "../types/ICommandExecutable";
-import niceDate from "../utils/niceDate";
-import { firstDayOfWeek } from "../utils/temporal";
 
 const rsvp: ICommandExecutable = {
 	command: new SlashCommandBuilder()

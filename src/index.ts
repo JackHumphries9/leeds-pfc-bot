@@ -1,12 +1,6 @@
 import {
-	ActionRowBuilder,
 	ActivityType,
-	ButtonBuilder,
-	ButtonStyle,
-	CategoryChannel,
 	Client,
-	ColorResolvable,
-	EmbedBuilder,
 	Events,
 	GatewayIntentBits,
 	TextChannel,
@@ -17,7 +11,6 @@ import { logError, info } from "./utils/logger";
 import { handleRSVP } from "./handleRSVP";
 import config from "./config";
 import schedule from "node-schedule";
-import { LocalRepository } from "./repositories/localRepository";
 import { RedisRepository } from "./repositories/redisRepository";
 import {
 	attendance,
@@ -28,8 +21,6 @@ import {
 	show_training,
 	print,
 } from "./commands";
-import niceDate from "./utils/niceDate";
-import { firstDayOfWeek } from "./utils/temporal";
 import { showRSVP } from "./showRSVP";
 
 process.on("SIGINT", function () {
@@ -115,11 +106,23 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isCommand()) return;
 
 	if (interaction.commandName === "rsvp") {
-		await interaction.deferReply({ ephemeral: true });
-		job.invoke();
-		await interaction.editReply({
-			content: "RSVP updated!",
-		});
+		try {
+			await interaction.deferReply({ ephemeral: true });
+			job.invoke();
+			await interaction.editReply({
+				content: "RSVP updated!",
+			});
+		} catch (error) {
+			logError(
+				"There was an error while executing this command! More info:",
+				error
+			);
+
+			await interaction.reply({
+				content: "There was an error while executing this command!",
+				ephemeral: true,
+			});
+		}
 		return;
 	}
 
@@ -140,6 +143,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			content: "There was an error while executing this command!",
 			ephemeral: true,
 		});
+		return;
 	}
 });
 
@@ -150,19 +154,42 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	const command = interaction.customId.split("/")[0];
 
 	if (command === "rsvp") {
-		return await handleRSVP(interaction);
+		try {
+			await handleRSVP(interaction);
+		} catch (error) {
+			logError(
+				"There was an error while executing this command! More info:",
+				error
+			);
+
+			await interaction.reply({
+				content: "There was an error while executing this command!",
+				ephemeral: true,
+			});
+		}
+		return;
 	}
 
 	if (command === "command") {
-		if (interaction.customId === "command/attendance") {
-			return await attendance.execute(interaction as any);
+		try {
+			if (interaction.customId === "command/attendance") {
+				return await attendance.execute(interaction as any);
+			}
+		} catch (error) {
+			logError(
+				"There was an error while executing this command! More info:",
+				error
+			);
+
+			await interaction.reply({
+				content: "There was an error while executing this command!",
+				ephemeral: true,
+			});
+			return;
 		}
 	}
 
-	interaction.reply({
-		ephemeral: true,
-		content: "Button pressed! (id: " + interaction.customId + ")",
-	});
+	return;
 });
 
 client.on(Events.GuildMemberAdd, async (member) => {
@@ -172,7 +199,7 @@ client.on(Events.GuildMemberAdd, async (member) => {
 
 	if (!channel) return;
 
-	channel.send(`Welcome to the server, ${member}!`);
+	await channel.send(`Welcome to the server, ${member}!`);
 });
 
 client.login(TOKEN);

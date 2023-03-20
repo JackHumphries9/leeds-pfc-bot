@@ -1,4 +1,3 @@
-import { TeamUpEvent } from "../types/TeamUpEvent";
 import { Attendance } from "../types/UtilTypes";
 
 export abstract class Repository {

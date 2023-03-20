@@ -2,7 +2,6 @@ import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { Attendance } from "../types/UtilTypes";
-import { debug } from "../utils/logger";
 import niceDate from "../utils/niceDate";
 
 const my_training: ICommandExecutable = {
