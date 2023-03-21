@@ -24,7 +24,7 @@ import {
 } from "./commands";
 import { showRSVP } from "./showRSVP";
 import { hasPermissions } from "./utils/hasPermissions";
-import { LocalRepository } from "./repositories/localRepository";
+
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -54,8 +54,8 @@ global.commands = {
 	[print.command.name]: print,
 };
 
-global.repository = new LocalRepository();
-//global.repository = new RedisRepository();
+//global.repository = new LocalRepository();
+global.repository = new RedisRepository();
 
 (async () => await registerCommands(global.commands))();
 
