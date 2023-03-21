@@ -163,17 +163,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (command === "rsvp") {
 		try {
-			await handleRSVP(interaction);
+			return await handleRSVP(interaction);
 		} catch (error) {
 			logError(
 				"There was an error while executing this command! More info:",
 				error
 			);
 
-			await interaction.reply({
-				content: "There was an error while executing this command!",
-				ephemeral: true,
-			});
+			//await interaction.reply({
+		 //content: "There was an error while executing this command!",
+		 //ephemeral: true,
+			//});
 		}
 		return;
 	}
@@ -189,13 +189,18 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				error
 			);
 
-			await interaction.reply({
-				content: "There was an error while executing this command!",
-				ephemeral: true,
-			});
+			//await interaction.reply({
+			//	content: "There was an error while executing this command!",
+			//	ephemeral: true,
+			//});
 			return;
 		}
 	}
+
+	await interaction.reply({
+		content: "There was an error while executing this command!",
+		ephemeral: true,
+	});
 
 	return;
 });
