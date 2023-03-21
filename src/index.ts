@@ -108,6 +108,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (interaction.commandName === "rsvp") {
 		try {
+			await interaction.deferReply({ ephemeral: true });
+
 			if (
 				!interaction.memberPermissions.has("Administrator") ||
 				!interaction.memberPermissions.has("ManageGuild")
@@ -124,7 +126,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				});
 				return;
 			}
-			await interaction.deferReply({ ephemeral: true });
 			job.invoke();
 			await interaction.editReply({
 				content: "RSVP updated!",
