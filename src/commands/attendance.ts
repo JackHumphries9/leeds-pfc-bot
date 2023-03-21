@@ -18,7 +18,9 @@ const attendance: ICommandExecutable = {
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
-		if (!hasPermissions(interaction)) return;
+		const perms = await hasPermissions(interaction);
+
+		if (!perms) return;
 
 		if (!global.calendar_cache) {
 			const card = new EmbedBuilder()

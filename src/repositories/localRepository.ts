@@ -55,7 +55,7 @@ export class LocalRepository extends Repository {
 		return { updated: false };
 	}
 
-	async dumpAttendance(): Promise<Attendance[]> {
+	async getAllAttendance(): Promise<Attendance[]> {
 		return this.db;
 	}
 }

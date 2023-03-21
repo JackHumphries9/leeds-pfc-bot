@@ -104,7 +104,7 @@ const devConfig: BotConfig = {
 };
 
 const prodConfig: BotConfig = {
-	guildId: "1064867500711497743",
+	guildId: "1064867500711497743	",
 	adminRoleId: "1064867500711497743",
 	welcomeChannelId: "1064867501231575119",
 	tdChannelId: "1073596981164904498",

@@ -27,7 +27,9 @@ const print: ICommandExecutable = {
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
-		if (!hasPermissions(interaction)) return;
+		const perms = await hasPermissions(interaction);
+
+		if (!perms) return;
 
 		// @ts-ignore
 		if (interaction.options.getSubcommand() === "socials") {

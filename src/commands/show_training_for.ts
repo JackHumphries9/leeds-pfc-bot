@@ -18,7 +18,9 @@ const show_training_for: ICommandExecutable = {
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
-		if (!hasPermissions(interaction)) return;
+		const perms = await hasPermissions(interaction);
+
+		if (!perms) return;
 
 		//@ts-ignore
 		const teamId = interaction.options.getRole("team").id;

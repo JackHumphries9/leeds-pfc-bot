@@ -16,7 +16,7 @@ const refresh_cache: ICommandExecutable = {
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
-		if (!hasPermissions(interaction)) return;
+		if (!(await hasPermissions(interaction))) return;
 
 		let card = new EmbedBuilder();
 
