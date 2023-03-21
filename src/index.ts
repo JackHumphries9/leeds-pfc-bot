@@ -50,7 +50,6 @@ global.commands = {
 	[attendance.command.name]: attendance,
 	[debug_command.command.name]: debug_command,
 	[print.command.name]: print,
-	[priv_esc.command.name]: priv_esc,
 };
 
 //global.repository = new LocalRepository();
