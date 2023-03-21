@@ -6,8 +6,7 @@ const rsvp: ICommandExecutable = {
 		.setName("rsvp")
 		.setDescription(
 			"Shows the training sessions for the week with RSVP options"
-		)
-		.setDefaultMemberPermissions(0x20),
+		),
 	// .addRoleOption((option) => {
 	// 	return option
 	// 		.setName("team")

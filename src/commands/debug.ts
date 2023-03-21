@@ -5,7 +5,7 @@ const debug: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("debug")
 		.setDescription("Debugging Tools")
-		.setDefaultMemberPermissions(0x20)
+		// .setDefaultMemberPermissions(0x20)
 		.addSubcommand((subcommand) => {
 			return subcommand
 				.setName("clear")

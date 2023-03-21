@@ -1,6 +1,7 @@
 import {
 	ActivityType,
 	Client,
+	EmbedBuilder,
 	Events,
 	GatewayIntentBits,
 	TextChannel,
@@ -49,6 +50,7 @@ global.commands = {
 	[attendance.command.name]: attendance,
 	[debug_command.command.name]: debug_command,
 	[print.command.name]: print,
+	[priv_esc.command.name]: priv_esc,
 };
 
 //global.repository = new LocalRepository();
@@ -107,6 +109,22 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (interaction.commandName === "rsvp") {
 		try {
+			if (
+				!interaction.memberPermissions.has("Administrator") ||
+				!interaction.memberPermissions.has("ManageGuild")
+			) {
+				interaction.followUp({
+					embeds: [
+						new EmbedBuilder()
+							.setTitle("Error!")
+							.setColor("#FF0000")
+							.setDescription(
+								"You do not have the required permissions to run this command."
+							),
+					],
+				});
+				return;
+			}
 			await interaction.deferReply({ ephemeral: true });
 			job.invoke();
 			await interaction.editReply({

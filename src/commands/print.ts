@@ -12,7 +12,7 @@ const print: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("say")
 		.setDescription("Say a message")
-		.setDefaultMemberPermissions(0x20)
+		// .setDefaultMemberPermissions(0x20)
 		.addSubcommand((subcommand) => {
 			return subcommand
 				.setName("socials")
