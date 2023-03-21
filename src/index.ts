@@ -23,6 +23,7 @@ import {
 	print,
 } from "./commands";
 import { showRSVP } from "./showRSVP";
+import { hasPermissions } from "./utils/hasPermissions";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -110,22 +111,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		try {
 			await interaction.deferReply({ ephemeral: true });
 
-			if (
-				!interaction.memberPermissions.has("Administrator") ||
-				!interaction.memberPermissions.has("ManageGuild")
-			) {
-				interaction.followUp({
-					embeds: [
-						new EmbedBuilder()
-							.setTitle("Error!")
-							.setColor("#FF0000")
-							.setDescription(
-								"You do not have the required permissions to run this command."
-							),
-					],
-				});
-				return;
-			}
+			if (!hasPermissions(interaction)) return;
+
 			job.invoke();
 			await interaction.editReply({
 				content: "RSVP updated!",

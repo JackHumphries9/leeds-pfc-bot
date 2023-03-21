@@ -1,6 +1,7 @@
 import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
+import { hasPermissions } from "../utils/hasPermissions";
 import niceDate from "../utils/niceDate";
 
 const attendance: ICommandExecutable = {
@@ -17,24 +18,7 @@ const attendance: ICommandExecutable = {
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
-		if (
-			//@ts-ignore
-			!interaction.member.roles.cache.find(
-				(r) => r.id == config.adminRoleId
-			)
-		) {
-			interaction.followUp({
-				embeds: [
-					new EmbedBuilder()
-						.setTitle("Not admin!")
-						.setColor("#FF0000")
-						.setDescription(
-							"You cannot use this command as you are not an admin."
-						),
-				],
-			});
-			return;
-		}
+		if (!hasPermissions(interaction)) return;
 
 		if (!global.calendar_cache) {
 			const card = new EmbedBuilder()

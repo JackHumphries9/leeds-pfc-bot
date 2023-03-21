@@ -1,6 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import fetchCalendarData from "../fetchCalendarData";
 import { ICommandExecutable } from "../types/ICommandExecutable";
+import { hasPermissions } from "../utils/hasPermissions";
 
 const refresh_cache: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -15,22 +16,7 @@ const refresh_cache: ICommandExecutable = {
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
-		if (
-			!interaction.memberPermissions.has("Administrator") ||
-			!interaction.memberPermissions.has("ManageGuild")
-		) {
-			interaction.followUp({
-				embeds: [
-					new EmbedBuilder()
-						.setTitle("Error!")
-						.setColor("#FF0000")
-						.setDescription(
-							"You do not have the required permissions to run this command."
-						),
-				],
-			});
-			return;
-		}
+		if (!hasPermissions(interaction)) return;
 
 		let card = new EmbedBuilder();
 
