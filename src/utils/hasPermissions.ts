@@ -14,7 +14,10 @@ export const hasPermissions = async (
 ): Promise<boolean> => {
 	const m = await interaction.guild.members.fetch(interaction.user.id);
 
-	if (m.roles.cache.find((r) => r.id === config.adminRoleId) === undefined) {
+	if (
+		m.roles.cache.find((r) => config.adminRoleIds.includes(r.id)) ===
+		undefined
+	) {
 		interaction.followUp({
 			embeds: [
 				new EmbedBuilder()
