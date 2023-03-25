@@ -2,6 +2,7 @@ import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import fetchCalendarData from "../fetchCalendarData";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
+import { logAction } from "../utils/logAction";
 
 const refresh_cache: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -17,6 +18,10 @@ const refresh_cache: ICommandExecutable = {
 		await interaction.deferReply();
 
 		if (!(await hasPermissions(interaction))) return;
+		logAction(
+			`Refresh Cache command used by ${interaction.user.tag}`,
+			interaction.client
+		);
 
 		let card = new EmbedBuilder();
 

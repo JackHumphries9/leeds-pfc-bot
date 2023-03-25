@@ -1,5 +1,6 @@
 import { ButtonInteraction, CacheType, EmbedBuilder } from "discord.js";
 import config from "./config";
+import { logAction } from "./utils/logAction";
 import { debug } from "./utils/logger";
 
 const handleRSVP = async (
@@ -74,6 +75,18 @@ const handleRSVP = async (
 	// a good hex color for soft red is #f44336
 
 	if (!dbUpdate.updated) {
+		if (att) {
+			logAction(
+				`${interaction.user.tag} Set their attendance to **attending** for ${calendarEvent.title}`,
+				interaction.client
+			);
+		} else {
+			logAction(
+				`${interaction.user.tag} Set their attendance to **not attending** for ${calendarEvent.title}`,
+				interaction.client
+			);
+		}
+
 		return interaction.followUp({
 			ephemeral: true,
 			embeds: [
@@ -88,6 +101,18 @@ const handleRSVP = async (
 			],
 		});
 	} else {
+		if (att) {
+			logAction(
+				`${interaction.user.tag} Updated their attendance to **attending** for ${calendarEvent.title}`,
+				interaction.client
+			);
+		} else {
+			logAction(
+				`${interaction.user.tag} Updated their attendance to **not attending** for ${calendarEvent.title}`,
+				interaction.client
+			);
+		}
+
 		interaction.followUp({
 			ephemeral: true,
 			embeds: [

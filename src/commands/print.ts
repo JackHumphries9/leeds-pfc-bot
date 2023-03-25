@@ -8,6 +8,7 @@ import {
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
+import { logAction } from "../utils/logAction";
 
 const print: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -30,6 +31,11 @@ const print: ICommandExecutable = {
 		const perms = await hasPermissions(interaction);
 
 		if (!perms) return;
+
+		logAction(
+			`Print command used by ${interaction.user.tag}`,
+			interaction.client
+		);
 
 		// @ts-ignore
 		if (interaction.options.getSubcommand() === "socials") {

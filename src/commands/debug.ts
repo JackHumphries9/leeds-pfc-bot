@@ -1,6 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
+import { logAction } from "../utils/logAction";
 
 const debug: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -17,6 +18,11 @@ const debug: ICommandExecutable = {
 		}) as any,
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
+
+		logAction(
+			`Debug command used by ${interaction.user.tag}`,
+			interaction.client
+		);
 
 		const perms = await hasPermissions(interaction);
 

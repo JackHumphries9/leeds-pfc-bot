@@ -2,6 +2,7 @@ import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
+import { logAction } from "../utils/logAction";
 import niceDate from "../utils/niceDate";
 
 const show_training_for: ICommandExecutable = {
@@ -21,6 +22,11 @@ const show_training_for: ICommandExecutable = {
 		const perms = await hasPermissions(interaction);
 
 		if (!perms) return;
+
+		logAction(
+			`Show Training For command used by ${interaction.user.tag}`,
+			interaction.client
+		);
 
 		//@ts-ignore
 		const teamId = interaction.options.getRole("team").id;

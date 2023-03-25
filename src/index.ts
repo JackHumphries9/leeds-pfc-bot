@@ -24,7 +24,7 @@ import {
 } from "./commands";
 import { showRSVP } from "./showRSVP";
 import { hasPermissions } from "./utils/hasPermissions";
-
+import { logAction } from "./utils/logAction";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -70,6 +70,7 @@ rule.hour = 9;
 
 const job = schedule.scheduleJob(rule, async () => {
 	info("Starting Scheduled Job");
+	logAction("Starting Scheduled Job", client);
 
 	global.calendar_cache = await fetchCalendarData();
 
@@ -102,6 +103,7 @@ client.once(Events.ClientReady, async (c) => {
 	info(`Ready! Logged in as ${c.user.tag}`);
 	c.user.setActivity("Powerchair Football", { type: ActivityType.Playing });
 	global.calendar_cache = await fetchCalendarData();
+	logAction("The bot has started up!", client);
 	//job.invoke();
 });
 
@@ -171,8 +173,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			);
 
 			//await interaction.reply({
-		 //content: "There was an error while executing this command!",
-		 //ephemeral: true,
+			//content: "There was an error while executing this command!",
+			//ephemeral: true,
 			//});
 		}
 		return;

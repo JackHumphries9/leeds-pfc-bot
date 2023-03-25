@@ -2,6 +2,7 @@ import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { Attendance } from "../types/UtilTypes";
+import { logAction } from "../utils/logAction";
 import niceDate from "../utils/niceDate";
 
 const my_training: ICommandExecutable = {
@@ -10,6 +11,11 @@ const my_training: ICommandExecutable = {
 		.setDescription("Shows your training sessions for the week"),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
+
+		logAction(
+			`My Training command used by ${interaction.user.tag}`,
+			interaction.client
+		);
 
 		if (!global.calendar_cache) {
 			const card = new EmbedBuilder()

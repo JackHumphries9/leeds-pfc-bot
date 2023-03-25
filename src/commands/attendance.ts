@@ -2,6 +2,7 @@ import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
+import { logAction } from "../utils/logAction";
 import niceDate from "../utils/niceDate";
 
 const attendance: ICommandExecutable = {
@@ -21,6 +22,11 @@ const attendance: ICommandExecutable = {
 		const perms = await hasPermissions(interaction);
 
 		if (!perms) return;
+
+		logAction(
+			`Attendance command used by ${interaction.user.tag}`,
+			interaction.client
+		);
 
 		if (!global.calendar_cache) {
 			const card = new EmbedBuilder()

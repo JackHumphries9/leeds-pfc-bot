@@ -19,6 +19,7 @@ export interface BotConfig {
 	adminRoleIds: string[];
 	welcomeChannelId: string;
 	tdChannelId: string;
+	logChannelId: string;
 }
 
 const stage = process.env.STAGE || "dev";
@@ -46,6 +47,7 @@ const devConfig: BotConfig = {
 	adminRoleIds: ["1070298227783520297"],
 	welcomeChannelId: "1070297375400271954",
 	tdChannelId: "1070832922539606057",
+	logChannelId: "1089304285839380570",
 
 	eventMap: {
 		11026484: {
@@ -108,6 +110,7 @@ const prodConfig: BotConfig = {
 	adminRoleIds: ["1064867500711497743", "1064867500711497740"],
 	welcomeChannelId: "1064867501231575119",
 	tdChannelId: "1073596981164904498",
+	logChannelId: "1089303801351114814",
 
 	eventMap: {
 		11026484: {
