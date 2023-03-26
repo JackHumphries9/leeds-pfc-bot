@@ -65,8 +65,9 @@ const client = new Client({
 
 // Setup automatic cache refresh
 const rule = new schedule.RecurrenceRule();
-rule.dayOfWeek = 0;
-rule.hour = 9;
+rule.dayOfWeek = 1;
+rule.hour = 7;
+rule.minute = 30;
 
 const job = schedule.scheduleJob(rule, async () => {
 	info("Starting Scheduled Job");
