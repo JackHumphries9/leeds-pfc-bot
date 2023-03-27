@@ -8,10 +8,15 @@ import {
 	RedisScripts,
 } from "redis";
 import { redisConnect } from "./redisConnect";
+import config from "../config";
+import { firstDayOfWeek } from "../utils/temporal";
 
 export class RedisRepository extends Repository {
 	private db: RedisClientType<RedisModules, RedisFunctions, RedisScripts>;
-	private readonly key = "attendance";
+	private readonly key =
+		config.stage && config.stage === "prod"
+			? "attendance"
+			: "attendance-dev";
 
 	constructor() {
 		super();
@@ -83,6 +88,7 @@ export class RedisRepository extends Repository {
 			userId: userId,
 			eventId: eventId,
 			attending: attending,
+			at: Date.now(),
 		});
 		await this.db.set(this.key, JSON.stringify(attendance));
 
@@ -99,5 +105,23 @@ export class RedisRepository extends Repository {
 		const attendance = JSON.parse(attendanceStr) as Attendance[];
 
 		return attendance;
+	}
+
+	async clearOldAttendance(): Promise<void> {
+		const attendanceStr = await this.db.get(this.key);
+
+		if (!attendanceStr) {
+			return;
+		}
+
+		const attendance = JSON.parse(attendanceStr) as Attendance[];
+
+		const now = Date.now();
+
+		const newAttendance = attendance.filter(
+			(a) => now - a.at < firstDayOfWeek(new Date(), 1).getTime()
+		);
+
+		await this.db.set(this.key, JSON.stringify(newAttendance));
 	}
 }

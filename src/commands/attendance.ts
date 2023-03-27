@@ -95,10 +95,10 @@ const attendance: ICommandExecutable = {
 						attMeta += "No one has RSVP'd for this event yet.";
 					}
 
+					const members = await interaction.guild.members.fetch();
+
 					attendance.forEach((att) => {
-						const user = interaction.guild.members.cache.find(
-							(u) => att.userId === u.id
-						);
+						const user = members.find((u) => att.userId === u.id);
 						attMeta += `*${user}* - ${
 							att.attending ? "Attending" : "Not Attending"
 						}\n`;

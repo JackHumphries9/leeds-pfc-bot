@@ -22,6 +22,7 @@ export interface BotConfig {
 	logChannelId: string;
 	verifyChannelId: string;
 	verifyRoleId: string;
+	stage: string;
 }
 
 const stage = process.env.STAGE || "dev";
@@ -52,6 +53,7 @@ const devConfig: BotConfig = {
 	logChannelId: "1089304285839380570",
 	verifyChannelId: "1089639397785354421",
 	verifyRoleId: "1089639719803044031",
+	stage: "dev",
 
 	eventMap: {
 		11026484: {
@@ -117,6 +119,7 @@ const prodConfig: BotConfig = {
 	logChannelId: "1089303801351114814",
 	verifyChannelId: "1089639549224882256",
 	verifyRoleId: "1089639996690006078",
+	stage: "prod",
 
 	eventMap: {
 		11026484: {

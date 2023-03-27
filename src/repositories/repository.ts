@@ -27,4 +27,8 @@ export abstract class Repository {
 	async getAllAttendance(): Promise<Attendance[]> {
 		throw new Error("Method not implemented.");
 	}
+
+	async clearOldAttendance(): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
 }

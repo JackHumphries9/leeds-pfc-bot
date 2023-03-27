@@ -9,6 +9,7 @@ export interface Attendance {
 	userId: string;
 	attending: boolean;
 	eventId: string;
+	at: number;
 }
 declare global {
 	var calendar_cache: TeamUpEvent[];

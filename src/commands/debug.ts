@@ -11,8 +11,15 @@ const debug: ICommandExecutable = {
 		.addSubcommand((subcommand) => {
 			return subcommand
 				.setName("clear")
-				.setDescription("Clear the store");
+				.setDescription("Clear the store")
+				.addBooleanOption((option) => {
+					return option
+						.setName("all")
+						.setDescription("Clear the entire store")
+						.setRequired(true);
+				});
 		})
+
 		.addSubcommand((subcommand) => {
 			return subcommand.setName("view").setDescription("View the store");
 		}) as any,
@@ -30,6 +37,9 @@ const debug: ICommandExecutable = {
 
 		// @ts-ignore
 		if (interaction.options.getSubcommand() === "clear") {
+			// @ts-ignore
+			const all: boolean = interaction.options.getBoolean("data");
+
 			global.repository.clearAttendance();
 
 			const card = new EmbedBuilder()

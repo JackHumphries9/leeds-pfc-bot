@@ -2,6 +2,7 @@ import { Repository } from "./repository";
 
 import { Attendance } from "../types/UtilTypes";
 import { debug } from "../utils/logger";
+import { firstDayOfWeek } from "../utils/temporal";
 
 export class LocalRepository extends Repository {
 	private db: Attendance[];
@@ -49,6 +50,7 @@ export class LocalRepository extends Repository {
 			userId: userId,
 			eventId: eventId,
 			attending: attending,
+			at: Date.now(),
 		});
 		debug(JSON.stringify(this.db));
 
@@ -57,5 +59,11 @@ export class LocalRepository extends Repository {
 
 	async getAllAttendance(): Promise<Attendance[]> {
 		return this.db;
+	}
+
+	async clearOldAttendance(): Promise<void> {
+		this.db = this.db.filter(
+			(a) => a.at > firstDayOfWeek(new Date(), 1).getTime()
+		);
 	}
 }
