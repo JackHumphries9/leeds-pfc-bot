@@ -24,6 +24,11 @@ const print: ICommandExecutable = {
 			return subcommand
 				.setName("help")
 				.setDescription("Say the help message");
+		})
+		.addSubcommand((subcommand) => {
+			return subcommand
+				.setName("verify")
+				.setDescription("Say the verify message");
 		}) as any,
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
@@ -117,6 +122,34 @@ const print: ICommandExecutable = {
 
 			interaction.channel.send({
 				embeds: [card, stCard, atCard, sCard],
+			});
+
+			interaction.followUp("Okie Dokie!");
+
+			return;
+		}
+
+		// @ts-ignore
+		if (interaction.options.getSubcommand() == "verify") {
+			const card = new EmbedBuilder()
+				.setTitle(
+					"Welcome to the Leeds Powerchair Football Club Discord Server!"
+				)
+				.setColor("#4aaace")
+				.setDescription(
+					`Please verify yourself by clicking the button below!`
+				);
+
+			interaction.channel.send({
+				embeds: [card],
+				components: [
+					new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setLabel("Verify")
+							.setStyle(ButtonStyle.Primary)
+							.setCustomId("verify")
+					) as any,
+				],
 			});
 
 			interaction.followUp("Okie Dokie!");

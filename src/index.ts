@@ -25,6 +25,9 @@ import {
 import { showRSVP } from "./showRSVP";
 import { hasPermissions } from "./utils/hasPermissions";
 import { logAction } from "./utils/logAction";
+import { handleVerifyModal } from "./handlers/handleVerifyModal";
+import { handleVerify } from "./handlers/handleVerify";
+import customIdParser from "./utils/commandParser";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -162,7 +165,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return;
 	info(`Executing button interaction '${interaction.customId}...'`);
 
-	const command = interaction.customId.split("/")[0];
+	const { command, data: commandData } = customIdParser(interaction.customId);
 
 	if (command === "rsvp") {
 		try {
@@ -200,12 +203,53 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		}
 	}
 
+	if (command === "verify") {
+		try {
+			return await handleVerifyModal(interaction);
+		} catch (error) {
+			logError(
+				"There was an error while executing this command! More info:",
+				error
+			);
+
+			await interaction.reply({
+				content: "There was an error while executing this command!",
+				ephemeral: true,
+			});
+			return;
+		}
+	}
+
+	if (command === "acceptVerify") {
+	}
+
 	await interaction.reply({
 		content: "There was an error while executing this command!",
 		ephemeral: true,
 	});
 
 	return;
+});
+
+client.on(Events.InteractionCreate, async (interaction) => {
+	if (!interaction.isModalSubmit()) return;
+
+	if (interaction.customId === "verifyModal") {
+		try {
+			return await handleVerify(interaction);
+		} catch (error) {
+			logError(
+				"There was an error while executing this command! More info:",
+				error
+			);
+
+			await interaction.reply({
+				content: "There was an error while executing this command!",
+				ephemeral: true,
+			});
+			return;
+		}
+	}
 });
 
 client.on(Events.GuildMemberAdd, async (member) => {
