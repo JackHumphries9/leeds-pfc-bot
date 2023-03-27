@@ -1,7 +1,6 @@
 import {
 	ActivityType,
 	Client,
-	EmbedBuilder,
 	Events,
 	GatewayIntentBits,
 	TextChannel,
@@ -28,6 +27,7 @@ import { logAction } from "./utils/logAction";
 import { handleVerifyModal } from "./handlers/handleVerifyModal";
 import { handleVerify } from "./handlers/handleVerify";
 import customIdParser from "./utils/commandParser";
+import handleAcceptVerify from "./handlers/handleAcceptVerify";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -221,6 +221,20 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 
 	if (command === "acceptVerify") {
+		try {
+			return await handleAcceptVerify(interaction);
+		} catch (error) {
+			logError(
+				"There was an error while executing this command! More info:",
+				error
+			);
+
+			await interaction.reply({
+				content: "There was an error while executing this command!",
+				ephemeral: true,
+			});
+			return;
+		}
 	}
 
 	await interaction.reply({
