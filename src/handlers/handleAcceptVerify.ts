@@ -1,5 +1,6 @@
-import { ButtonInteraction, CacheType } from "discord.js";
+import { ButtonInteraction, CacheType, Guild } from "discord.js";
 import config from "../config";
+import { logAction } from "../utils/logAction";
 
 const handleAcceptVerify = async (
 	interaction: ButtonInteraction<CacheType>
@@ -14,7 +15,13 @@ const handleAcceptVerify = async (
 		return interaction.followUp({ content: "User not found!" });
 	}
 
-	m.roles.add(config.verifyRoleId);
+	try {
+		await m.roles.add(config.verifyRoleId);
+	} catch {
+		return await interaction.followUp({ content: "Failed to add role!" });
+	}
+
+	logAction(`Verified ${m.user.tag} (${m.id})`, interaction.guild as any);
 
 	await interaction.followUp({ content: "User verified!" });
 };

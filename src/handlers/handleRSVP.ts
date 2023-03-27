@@ -1,7 +1,7 @@
 import { ButtonInteraction, CacheType, EmbedBuilder } from "discord.js";
-import config from "./config";
-import { logAction } from "./utils/logAction";
-import { debug } from "./utils/logger";
+import config from "../config";
+import { logAction } from "../utils/logAction";
+import { debug } from "../utils/logger";
 
 const handleRSVP = async (
 	interaction: ButtonInteraction<CacheType>

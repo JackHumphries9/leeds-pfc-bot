@@ -8,7 +8,7 @@ import {
 import registerCommands from "./registerCommands";
 import fetchCalendarData from "./fetchCalendarData";
 import { logError, info } from "./utils/logger";
-import { handleRSVP } from "./handleRSVP";
+import { handleRSVP } from "./handlers/handleRSVP";
 import config from "./config";
 import schedule from "node-schedule";
 import { RedisRepository } from "./repositories/redisRepository";
