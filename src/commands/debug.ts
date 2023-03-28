@@ -40,7 +40,11 @@ const debug: ICommandExecutable = {
 			// @ts-ignore
 			const all: boolean = interaction.options.getBoolean("data");
 
-			global.repository.clearAttendance();
+			if (all) {
+				global.repository.clearAttendance();
+			} else {
+				global.repository.clearOldAttendance();
+			}
 
 			const card = new EmbedBuilder()
 				.setTitle("Cleared!")
