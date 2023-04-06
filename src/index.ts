@@ -19,7 +19,7 @@ import {
 	refresh_cache,
 	rsvp,
 	show_training,
-	print,
+	say,
 } from "./commands";
 import { showRSVP } from "./showRSVP";
 import { hasPermissions } from "./utils/hasPermissions";
@@ -54,7 +54,7 @@ global.commands = {
 	[rsvp.command.name]: rsvp,
 	[attendance.command.name]: attendance,
 	[debug_command.command.name]: debug_command,
-	[print.command.name]: print,
+	[say.command.name]: say,
 };
 
 //global.repository = new LocalRepository();

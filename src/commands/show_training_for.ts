@@ -14,7 +14,7 @@ const show_training_for: ICommandExecutable = {
 				.setName("team")
 				.setDescription("The team to show training for")
 				.setRequired(true)
-		) as any,
+		),
 
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });

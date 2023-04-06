@@ -13,7 +13,7 @@ const refresh_cache: ICommandExecutable = {
 			opt.setName("data");
 			opt.setDescription("Show the JSON data back from the API");
 			return opt;
-		}) as any,
+		}),
 	execute: async (interaction) => {
 		await interaction.deferReply();
 

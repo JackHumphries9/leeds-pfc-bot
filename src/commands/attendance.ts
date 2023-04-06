@@ -14,8 +14,7 @@ const attendance: ICommandExecutable = {
 				.setName("team")
 				.setDescription("The team to show RSVPs for")
 				.setRequired(false)
-		) as any,
-
+		),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 

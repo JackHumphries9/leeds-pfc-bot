@@ -29,7 +29,7 @@ const print: ICommandExecutable = {
 			return subcommand
 				.setName("verify")
 				.setDescription("Say the verify message");
-		}) as any,
+		}),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
