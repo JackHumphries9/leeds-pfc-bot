@@ -4,7 +4,8 @@ import { ICommandExecutable } from "../types/ICommandExecutable";
 const ping: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("ping")
-		.setDescription("Replies with pong!"),
+		.setDescription("Replies with pong!")
+		.setDefaultMemberPermissions(0x8)
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 

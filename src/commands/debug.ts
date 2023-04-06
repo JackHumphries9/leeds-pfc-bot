@@ -2,12 +2,13 @@ import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
 import { logAction } from "../utils/logAction";
+import { info } from "../utils/logger";
 
 const debug: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("debug")
 		.setDescription("Debugging Tools")
-		// .setDefaultMemberPermissions(0x20)
+		.setDefaultMemberPermissions(0x8)
 		.addSubcommand((subcommand) => {
 			return subcommand
 				.setName("clear")
@@ -41,8 +42,10 @@ const debug: ICommandExecutable = {
 			const all: boolean = interaction.options.getBoolean("data");
 
 			if (all) {
+				info("Clearing the store");
 				global.repository.clearAttendance();
 			} else {
+				info("Clearing the old store");
 				global.repository.clearOldAttendance();
 			}
 

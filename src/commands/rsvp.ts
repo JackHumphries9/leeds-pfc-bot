@@ -4,6 +4,7 @@ import { ICommandExecutable } from "../types/ICommandExecutable";
 const rsvp: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("rsvp")
+		.setDefaultMemberPermissions(0x8)
 		.setDescription(
 			"Shows the training sessions for the week with RSVP options"
 		),
