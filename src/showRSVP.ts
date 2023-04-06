@@ -94,6 +94,10 @@ ${
 		components: [
 			new ActionRowBuilder().addComponents(
 				new ButtonBuilder()
+					.setCustomId(`command/mytraining`)
+					.setLabel("My Training")
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
 					.setCustomId(`command/attendance`)
 					.setLabel("Show Attendance")
 					.setStyle(ButtonStyle.Secondary)

@@ -189,6 +189,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			if (interaction.customId === "command/attendance") {
 				return await attendance.execute(interaction as any);
 			}
+			if (interaction.customId === "command/mytraining") {
+				return await my_training.execute(interaction as any);
+			}
 		} catch (error) {
 			logError(
 				"There was an error while executing this command! More info:",
