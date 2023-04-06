@@ -137,18 +137,18 @@ const prodConfig: BotConfig = {
 			name: "Dynamos",
 			roleId: [roleIds.dynamos],
 		},
-		11029974: {
-			colour: teamUpColorToHex(24) as ColorResolvable,
-			name: "Events",
-			roleId: [
-				roleIds.dynamos,
-				roleIds.chariots,
-				roleIds.centurions,
-				roleIds.spartans,
-				roleIds.hurricanes,
-				roleIds.amazons,
-			],
-		},
+		//11029974: {
+		//colour: teamUpColorToHex(24) as ColorResolvable,
+	 //name: "Events",
+	 //roleId: [
+		// roleIds.dynamos,
+		// roleIds.chariots,
+		// roleIds.centurions,
+		// roleIds.spartans,
+		// roleIds.hurricanes,
+		// roleIds.amazons,
+	 //],
+		//},
 		11026485: {
 			colour: teamUpColorToHex(26) as ColorResolvable,
 			name: "Hurricanes",
