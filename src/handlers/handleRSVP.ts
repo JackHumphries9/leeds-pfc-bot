@@ -1,4 +1,9 @@
-import { ButtonInteraction, CacheType, EmbedBuilder } from "discord.js";
+import {
+	ButtonInteraction,
+	CacheType,
+	EmbedBuilder,
+	GuildMemberRoleManager,
+} from "discord.js";
 import config from "../config";
 import { logAction } from "../utils/logAction";
 import { debug } from "../utils/logger";
@@ -35,11 +40,11 @@ const handleRSVP = async (
 
 	calendarEvent.subcalendar_ids.forEach((id) => {
 		if (
-			//@ts-ignore
-			interaction.member.roles.cache.find((role) =>
-				config.eventMap[id.toString()].roleId.includes(
-					role.id.toString()
-				)
+			(interaction.member.roles as GuildMemberRoleManager).cache.find(
+				(role) =>
+					config.eventMap[id.toString()].roleId.includes(
+						role.id.toString()
+					)
 			)
 		) {
 			canRSVP = true;

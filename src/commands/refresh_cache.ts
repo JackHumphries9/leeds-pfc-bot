@@ -1,4 +1,8 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import {
+	CommandInteractionOptionResolver,
+	EmbedBuilder,
+	SlashCommandBuilder,
+} from "discord.js";
 import fetchCalendarData from "../fetchCalendarData";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
@@ -8,14 +12,14 @@ const refresh_cache: ICommandExecutable = {
 	command: new SlashCommandBuilder()
 		.setName("refresh-teamup")
 		.setDescription("Refreshes the TeamUp Cache")
-		// .setDefaultMemberPermissions(0x20)
+		.setDefaultMemberPermissions(0x8)
 		.addBooleanOption((opt) => {
 			opt.setName("data");
 			opt.setDescription("Show the JSON data back from the API");
 			return opt;
 		}),
 	execute: async (interaction) => {
-		await interaction.deferReply();
+		await interaction.deferReply({ ephemeral: true });
 
 		if (!(await hasPermissions(interaction))) return;
 		logAction(
@@ -25,8 +29,9 @@ const refresh_cache: ICommandExecutable = {
 
 		let card = new EmbedBuilder();
 
-		//@ts-ignore
-		const showData: boolean = interaction.options.getBoolean("data");
+		const showData: boolean = (
+			interaction.options as CommandInteractionOptionResolver
+		).getBoolean("data");
 
 		try {
 			const data = await fetchCalendarData();

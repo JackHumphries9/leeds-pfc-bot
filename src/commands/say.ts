@@ -2,6 +2,7 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	CommandInteractionOptionResolver,
 	EmbedBuilder,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -42,8 +43,11 @@ const print: ICommandExecutable = {
 			interaction.client
 		);
 
-		// @ts-ignore
-		if (interaction.options.getSubcommand() === "socials") {
+		if (
+			(
+				interaction.options as CommandInteractionOptionResolver
+			).getSubcommand() === "socials"
+		) {
 			const card = new EmbedBuilder()
 				.setTitle("LPFC Socials")
 				.setColor("#4aaace")
@@ -84,8 +88,11 @@ const print: ICommandExecutable = {
 			return;
 		}
 
-		// @ts-ignore
-		if (interaction.options.getSubcommand() === "help") {
+		if (
+			(
+				interaction.options as CommandInteractionOptionResolver
+			).getSubcommand() === "help"
+		) {
 			const card = new EmbedBuilder()
 				.setTitle("LPFC Bot Help")
 				.setDescription(
@@ -129,8 +136,11 @@ const print: ICommandExecutable = {
 			return;
 		}
 
-		// @ts-ignore
-		if (interaction.options.getSubcommand() == "verify") {
+		if (
+			(
+				interaction.options as CommandInteractionOptionResolver
+			).getSubcommand() == "verify"
+		) {
 			const card = new EmbedBuilder()
 				.setTitle(
 					"Welcome to the Leeds Powerchair Football Club Discord Server!"

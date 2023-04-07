@@ -16,7 +16,8 @@
 		"chalk": "^4.1.2",
 		"discord.js": "^14.7.1",
 		"node-schedule": "^2.1.1",
-		"redis": "^4.6.5"
+		"redis": "^4.6.5",
+		"uninstall": "^0.0.0"
 	},
 	"devDependencies": {
 		"@types/node": "^18.11.18",

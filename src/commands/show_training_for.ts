@@ -1,4 +1,9 @@
-import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import {
+	ColorResolvable,
+	CommandInteractionOptionResolver,
+	EmbedBuilder,
+	SlashCommandBuilder,
+} from "discord.js";
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
@@ -28,8 +33,9 @@ const show_training_for: ICommandExecutable = {
 			interaction.client
 		);
 
-		//@ts-ignore
-		const teamId = interaction.options.getRole("team").id;
+		const teamId = (
+			interaction.options as CommandInteractionOptionResolver
+		).getRole("team").id;
 
 		if (!global.calendar_cache) {
 			const card = new EmbedBuilder()
@@ -64,8 +70,9 @@ const show_training_for: ICommandExecutable = {
 				var shouldShow = false;
 				event.subcalendar_ids.forEach((id) => {
 					if (
-						config.eventMap[id.toString()].roleId ===
-						teamId.toString()
+						config.eventMap[id.toString()].roleId.find(
+							(r) => r === teamId.toString()
+						)
 					) {
 						shouldShow = true;
 					}
