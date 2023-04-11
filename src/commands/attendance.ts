@@ -108,7 +108,11 @@ const attendance: ICommandExecutable = {
 							config.eventMap[event.subcalendar_ids[0]].colour ||
 								("#4aaace" as ColorResolvable)
 						)
-						.setTitle(event.title)
+						.setTitle(
+							event.title && event.title.length > 0
+								? event.title
+								: "Untitled Event"
+						)
 						.setDescription(`**Time**: ${meta}\n${attMeta}`)
 						.setFooter({
 							text: `For: ${event.subcalendar_ids

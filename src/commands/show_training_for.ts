@@ -93,7 +93,11 @@ const show_training_for: ICommandExecutable = {
 						config.eventMap[event.subcalendar_ids[0]].colour ||
 							("#4aaace" as ColorResolvable)
 					)
-					.setTitle(event.title)
+					.setTitle(
+						event.title && event.title.length > 0
+							? event.title
+							: "Untitled Event"
+					)
 					.setDescription(
 						`**Time**: ${meta}
 ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
