@@ -36,7 +36,7 @@ export const handleVerify = async (
 			new EmbedBuilder()
 				.setTitle("Verification")
 				.setDescription(
-					`Member Account: <@!${interaction.user.id}>\n\n**Responses**:\nName: **${name}**\nTeam: **${team}**\nNumber: **${number}**`
+					`Member Account: <@!${interaction.user.id}> (${interaction.user.tag})\n\n**Responses**:\nName: **${name}**\nTeam: **${team}**\nNumber: **${number}**`
 				),
 		],
 		components: [
