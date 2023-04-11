@@ -23,6 +23,7 @@ export interface BotConfig {
 	verifyChannelId: string;
 	verifyRoleId: string;
 	stage: string;
+	allowedExecutors: string[];
 }
 
 const stage = process.env.STAGE || "dev";
@@ -54,6 +55,7 @@ const devConfig: BotConfig = {
 	verifyChannelId: "1089639397785354421",
 	verifyRoleId: "1089639719803044031",
 	stage: "dev",
+	allowedExecutors: ["1070294013778862080"],
 
 	eventMap: {
 		11026484: {
@@ -120,6 +122,7 @@ const prodConfig: BotConfig = {
 	verifyChannelId: "1089639549224882256",
 	verifyRoleId: "1089639996690006078",
 	stage: "prod",
+	allowedExecutors: ["1070294013778862080"],
 
 	eventMap: {
 		11026484: {
@@ -139,15 +142,15 @@ const prodConfig: BotConfig = {
 		},
 		//11029974: {
 		//colour: teamUpColorToHex(24) as ColorResolvable,
-	 //name: "Events",
-	 //roleId: [
+		//name: "Events",
+		//roleId: [
 		// roleIds.dynamos,
 		// roleIds.chariots,
 		// roleIds.centurions,
 		// roleIds.spartans,
 		// roleIds.hurricanes,
 		// roleIds.amazons,
-	 //],
+		//],
 		//},
 		11026485: {
 			colour: teamUpColorToHex(26) as ColorResolvable,
