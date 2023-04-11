@@ -74,6 +74,7 @@ rule.minute = 30;
 
 const job = schedule.scheduleJob(rule, async () => {
 	info("Starting Scheduled Job");
+
 	logAction("Starting Scheduled Job", client);
 
 	global.calendar_cache = await fetchCalendarData();

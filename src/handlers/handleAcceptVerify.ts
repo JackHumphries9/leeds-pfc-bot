@@ -21,7 +21,19 @@ const handleAcceptVerify = async (
 		return await interaction.followUp({ content: "Failed to add role!" });
 	}
 
-	logAction(`Verified ${m.user.tag} (${m.id})`, interaction.guild as any);
+	logAction(`Verified ${m.user.tag} (${m.id})`, interaction.client);
+
+	try {
+		await m.send("You have been verified in the server!");
+	} catch {
+		logAction(
+			`Verification Failed to send DM to ${m.user.tag}`,
+			interaction.client
+		);
+		return await interaction.followUp({
+			content: "Verified user but failed to DM.",
+		});
+	}
 
 	await interaction.followUp({ content: "User verified!" });
 };
