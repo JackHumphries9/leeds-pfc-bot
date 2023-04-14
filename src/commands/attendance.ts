@@ -99,7 +99,7 @@ const attendance: ICommandExecutable = {
 					attendance.forEach((att) => {
 						const user = members.find((u) => att.userId === u.id);
 						attMeta += `*${user}* - ${
-							att.attending ? "Attending" : "Not Attending"
+							att.attending ? "Attending ✅" : "Not Attending ❌"
 						}\n`;
 					});
 
