@@ -9,6 +9,7 @@ import {
 import config from "./config";
 import niceDate from "./utils/niceDate";
 import { firstDayOfWeek } from "./utils/temporal";
+import eventEmbedBuilder from "./utils/eventEmbedBuilder";
 
 export const showRSVP = async (channel: TextChannel) => {
 	if (global.calendar_cache.length === 0) {
@@ -26,48 +27,23 @@ export const showRSVP = async (channel: TextChannel) => {
 	}
 
 	global.calendar_cache.map(async (event) => {
-		const meta = niceDate(
-			new Date(event.start_dt),
-			new Date(event.end_dt),
-			event.all_day
-		);
-		await channel.send({
+		const meta = await channel.send({
 			embeds: [
-				new EmbedBuilder()
-					.setColor(
-						config.eventMap[event.subcalendar_ids[0]].colour ||
-							("#4aaace" as ColorResolvable)
-					)
-					.setTitle(
-						event.title && event.title.length > 0
-							? event.title
-							: "Untitled Event"
-					)
-					.setDescription(
-						`**Time**: ${meta}
-${
-	event.notes.length > 1 ? `**Notes**: ${event.notes}\n\n	` : "  "
-}**For:** ${event.subcalendar_ids
-							.map((id) =>
-								config.eventMap[id.toString()]
-									? config.eventMap[id.toString()].roleId.map(
-											(r) => `<@&${r.toString()}>`
-									  )
-									: "Unknown"
-							)
-							.join(", ")}`
+				eventEmbedBuilder({
+					title: event.title,
+					color: config.eventMap[event.subcalendar_ids[0]].colour,
+					for: event.subcalendar_ids,
+					notes: event.notes,
+					when: niceDate(
+						new Date(event.start_dt),
+						new Date(event.end_dt),
+						event.all_day
 					),
-				// .setFooter({
-				// 	text: `For: ${event.subcalendar_ids
-				// 		.map((id) =>
-				// 			config.eventMap[id.toString()]
-				// 				? config.eventMap[id.toString()].name
-				// 				: "Unknown"
-				// 		)
-				// 		.join(", ")}`,
-				// }),
+					where: event.location,
+				}),
 			],
 			components: [
+				// Actions for each event
 				new ActionRowBuilder().addComponents(
 					new ButtonBuilder()
 						.setCustomId(`rsvp/${event.id}?ok`)
@@ -96,6 +72,7 @@ ${
 				.setColor("#4aaace"),
 		],
 		components: [
+			// Bottom actions
 			new ActionRowBuilder().addComponents(
 				new ButtonBuilder()
 					.setCustomId(`command/mytraining`)
