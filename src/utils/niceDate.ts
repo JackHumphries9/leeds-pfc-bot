@@ -1,17 +1,25 @@
-const niceDate = (start: Date, end: Date, all_day?: boolean) => {
-	const st = start.getTime() / 1000;
-	const et = end.getTime() / 1000;
+import { timestamp, TimestampStyle } from "discord-string-formatting";
 
+const niceDate = (start: Date, end: Date, all_day?: boolean) => {
 	if (start.getDay() === end.getDay()) {
 		if (all_day) {
-			return `<t:${st}:D>`;
+			return `${timestamp(start, TimestampStyle.LongDate)}`;
 		}
-		return `<t:${st}:F> till <t:${et}:t>`;
+		return `${timestamp(
+			start,
+			TimestampStyle.LongDateTime
+		)} till ${timestamp(end, TimestampStyle.ShortTime)}`;
 	}
 	if (all_day) {
-		return `<t:${st}:D> till <t:${et}:D>`;
+		return `${timestamp(start, TimestampStyle.LongDate)} till ${timestamp(
+			end,
+			TimestampStyle.LongDate
+		)}`;
 	}
-	return `<t:${st}:F> till <t:${et}:F>`;
+	return `${timestamp(start, TimestampStyle.LongDateTime)} till ${timestamp(
+		end,
+		TimestampStyle.LongDateTime
+	)}`;
 };
 
 export default niceDate;

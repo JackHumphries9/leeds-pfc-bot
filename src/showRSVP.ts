@@ -10,6 +10,7 @@ import config from "./config";
 import niceDate from "./utils/niceDate";
 import { firstDayOfWeek } from "./utils/temporal";
 import eventEmbedBuilder from "./utils/eventEmbedBuilder";
+import { TimestampStyle, timestamp } from "discord-string-formatting";
 
 export const showRSVP = async (channel: TextChannel) => {
 	if (global.calendar_cache.length === 0) {
@@ -62,12 +63,10 @@ export const showRSVP = async (channel: TextChannel) => {
 			new EmbedBuilder()
 				.setTitle("Training Sessions")
 				.setDescription(
-					`Here are the training sessions for this week (WC: ${firstDayOfWeek(
-						new Date(),
-						1
-					).toLocaleDateString("en-GB", {
-						dateStyle: "short",
-					})}). Please RSVP to the ones you can attend.`
+					`Here are the training sessions for this week (WC: ${timestamp(
+						firstDayOfWeek(new Date(), 1),
+						TimestampStyle.ShortDate
+					)}. Please RSVP to the ones you can attend.`
 				)
 				.setColor("#4aaace"),
 		],

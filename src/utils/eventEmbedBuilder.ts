@@ -1,4 +1,4 @@
-import { ColorResolvable, EmbedBuilder } from "discord.js";
+import { ColorResolvable, EmbedBuilder, bold } from "discord.js";
 import config from "../config";
 
 interface IEventEmbedBuilderData {
@@ -13,11 +13,13 @@ interface IEventEmbedBuilderData {
 const eventEmbedBuilder = (data: IEventEmbedBuilderData): EmbedBuilder => {
 	const e = new EmbedBuilder();
 
-	const when = data.when ? `**Time**: ${data.when}\n` : "";
+	const when = data.when ? `${bold("Time")}: ${data.when}\n` : "";
 
-	const where = data.where ? `**At**: ${"`" + data.where + "`"}\n` : "";
+	const where = data.where
+		? `${bold("At")}: ${"`" + data.where + "`"}\n`
+		: "";
 
-	const forr = `**For**: ${data.for
+	const forr = `${bold("For")}: ${data.for
 		.map((id) =>
 			config.eventMap[id.toString()]
 				? config.eventMap[id.toString()].roleId.map(
@@ -27,7 +29,7 @@ const eventEmbedBuilder = (data: IEventEmbedBuilderData): EmbedBuilder => {
 		)
 		.join(", ")}\n`;
 
-	const notes = data.notes ? `**Notes**: ${data.notes}\n` : "";
+	const notes = data.notes ? `${bold("Notes")}: ${data.notes}\n` : "";
 
 	e.setTitle(
 		data.title && data.title.length > 0 ? data.title : "Untitled Event"
