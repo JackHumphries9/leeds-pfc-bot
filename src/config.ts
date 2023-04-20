@@ -26,9 +26,9 @@ export interface BotConfig {
 	allowedExecutors: string[];
 }
 
-const stage = process.env.STAGE || "dev";
+export const stage = process.env.STAGE || "dev";
 
-const roleIds = {
+const prodRoleIds = {
 	centurions: "1064872566067568651",
 	chariots: "1064871845398069258",
 	dynamos: "1064872253319295057",
@@ -46,6 +46,8 @@ const devRoleIds = {
 	amazons: "1070297928582844517",
 };
 
+export const ROLEIDS = stage == "prod" ? prodRoleIds : devRoleIds;
+
 const devConfig: BotConfig = {
 	guildId: "1070297374905352253",
 	adminRoleIds: ["1070298227783520297"],
@@ -61,54 +63,54 @@ const devConfig: BotConfig = {
 		11026484: {
 			colour: teamUpColorToHex(2) as ColorResolvable,
 			name: "Centurions",
-			roleId: [devRoleIds.centurions],
+			roleId: [ROLEIDS.centurions],
 		},
 		11026483: {
 			colour: teamUpColorToHex(36) as ColorResolvable,
 			name: "Chariots",
-			roleId: [devRoleIds.chariots],
+			roleId: [ROLEIDS.chariots],
 		},
 		11026445: {
 			colour: teamUpColorToHex(15) as ColorResolvable,
 			name: "Dynamos",
-			roleId: [devRoleIds.dynamos],
+			roleId: [ROLEIDS.dynamos],
 		},
 		11029974: {
 			colour: teamUpColorToHex(24) as ColorResolvable,
 			name: "Events",
 			roleId: [
-				devRoleIds.dynamos,
-				devRoleIds.chariots,
-				devRoleIds.centurions,
-				devRoleIds.spartans,
-				devRoleIds.hurricanes,
-				devRoleIds.amazons,
+				ROLEIDS.dynamos,
+				ROLEIDS.chariots,
+				ROLEIDS.centurions,
+				ROLEIDS.spartans,
+				ROLEIDS.hurricanes,
+				ROLEIDS.amazons,
 			],
 		},
 		11026485: {
 			colour: teamUpColorToHex(26) as ColorResolvable,
 			name: "Hurricanes",
-			roleId: [devRoleIds.hurricanes],
+			roleId: [ROLEIDS.hurricanes],
 		},
 		11029973: {
 			colour: teamUpColorToHex(6) as ColorResolvable,
 			name: "North East/Yorkshire League",
 			roleId: [
-				devRoleIds.dynamos,
-				devRoleIds.centurions,
-				devRoleIds.chariots,
-				devRoleIds.hurricanes,
+				ROLEIDS.dynamos,
+				ROLEIDS.centurions,
+				ROLEIDS.chariots,
+				ROLEIDS.hurricanes,
 			],
 		},
 		11026444: {
 			colour: teamUpColorToHex(19) as ColorResolvable,
 			name: "Spartans/Amazons",
-			roleId: [devRoleIds.spartans, devRoleIds.amazons],
+			roleId: [ROLEIDS.spartans, ROLEIDS.amazons],
 		},
 		11029970: {
 			colour: teamUpColorToHex(9) as ColorResolvable,
 			name: "WFA National League",
-			roleId: [devRoleIds.dynamos, devRoleIds.chariots],
+			roleId: [ROLEIDS.dynamos, ROLEIDS.chariots],
 		},
 	},
 };
@@ -132,54 +134,54 @@ const prodConfig: BotConfig = {
 		11026484: {
 			colour: teamUpColorToHex(2) as ColorResolvable,
 			name: "Centurions",
-			roleId: [roleIds.centurions],
+			roleId: [ROLEIDS.centurions],
 		},
 		11026483: {
 			colour: teamUpColorToHex(36) as ColorResolvable,
 			name: "Chariots",
-			roleId: [roleIds.chariots],
+			roleId: [ROLEIDS.chariots],
 		},
 		11026445: {
 			colour: teamUpColorToHex(15) as ColorResolvable,
 			name: "Dynamos",
-			roleId: [roleIds.dynamos],
+			roleId: [ROLEIDS.dynamos],
 		},
 		//11029974: {
 		//colour: teamUpColorToHex(24) as ColorResolvable,
 		//name: "Events",
 		//roleId: [
-		// roleIds.dynamos,
-		// roleIds.chariots,
-		// roleIds.centurions,
-		// roleIds.spartans,
-		// roleIds.hurricanes,
-		// roleIds.amazons,
+		// ROLEIDS.dynamos,
+		// ROLEIDS.chariots,
+		// ROLEIDS.centurions,
+		// ROLEIDS.spartans,
+		// ROLEIDS.hurricanes,
+		// ROLEIDS.amazons,
 		//],
 		//},
 		11026485: {
 			colour: teamUpColorToHex(26) as ColorResolvable,
 			name: "Hurricanes",
-			roleId: [roleIds.hurricanes],
+			roleId: [ROLEIDS.hurricanes],
 		},
 		11029973: {
 			colour: teamUpColorToHex(6) as ColorResolvable,
 			name: "North East/Yorkshire League",
 			roleId: [
-				roleIds.dynamos,
-				roleIds.centurions,
-				roleIds.chariots,
-				roleIds.hurricanes,
+				ROLEIDS.dynamos,
+				ROLEIDS.centurions,
+				ROLEIDS.chariots,
+				ROLEIDS.hurricanes,
 			],
 		},
 		11026444: {
 			colour: teamUpColorToHex(19) as ColorResolvable,
 			name: "Spartans/Amazons",
-			roleId: [roleIds.spartans, roleIds.amazons],
+			roleId: [ROLEIDS.spartans, ROLEIDS.amazons],
 		},
 		11029970: {
 			colour: teamUpColorToHex(9) as ColorResolvable,
 			name: "WFA National League",
-			roleId: [roleIds.dynamos, roleIds.chariots],
+			roleId: [ROLEIDS.dynamos, ROLEIDS.chariots],
 		},
 	},
 };

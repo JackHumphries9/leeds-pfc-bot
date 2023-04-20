@@ -1,8 +1,14 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import {
+	CommandInteractionOptionResolver,
+	EmbedBuilder,
+	Options,
+	SlashCommandBuilder,
+} from "discord.js";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
 import { logAction } from "../utils/logAction";
 import { info } from "../utils/logger";
+import config, { ROLEIDS } from "../config";
 
 const debug: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -20,10 +26,14 @@ const debug: ICommandExecutable = {
 						.setRequired(true);
 				});
 		})
-
 		.addSubcommand((subcommand) => {
 			return subcommand.setName("view").setDescription("View the store");
-		}) as any,
+		})
+		.addSubcommand((subcommand) => {
+			return subcommand
+				.setName("list-members")
+				.setDescription("List all members in the server");
+		}),
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
@@ -36,10 +46,14 @@ const debug: ICommandExecutable = {
 
 		if (!perms) return;
 
-		// @ts-ignore
-		if (interaction.options.getSubcommand() === "clear") {
-			// @ts-ignore
-			const all: boolean = interaction.options.getBoolean("data");
+		if (
+			(
+				interaction.options as CommandInteractionOptionResolver
+			).getSubcommand() === "clear"
+		) {
+			const all: boolean = (
+				interaction.options as CommandInteractionOptionResolver
+			).getBoolean("data");
 
 			if (all) {
 				info("Clearing the store");
@@ -60,8 +74,11 @@ const debug: ICommandExecutable = {
 			return;
 		}
 
-		// @ts-ignore
-		if (interaction.options.getSubcommand() === "view") {
+		if (
+			(
+				interaction.options as CommandInteractionOptionResolver
+			).getSubcommand() === "view"
+		) {
 			const card = new EmbedBuilder().setTitle("Store View")
 				.setDescription(`Here is the store:
 \`\`\`json\n${JSON.stringify(
@@ -84,6 +101,66 @@ const debug: ICommandExecutable = {
 		interaction.followUp({
 			embeds: [card],
 		});
+		if (
+			(
+				interaction.options as CommandInteractionOptionResolver
+			).getSubcommand() === "list-members"
+		) {
+			const members = await interaction.guild.members.fetch();
+
+			let tm: {
+				chariots: string[];
+				dynamos: string[];
+				centurions: string[];
+				hurricanes: string[];
+				spartans: string[];
+				amazons: string[];
+				unknown: string[];
+			} = {
+				chariots: [],
+				dynamos: [],
+				centurions: [],
+				hurricanes: [],
+				spartans: [],
+				amazons: [],
+				unknown: [],
+			};
+
+			members.sort((a, b) => {
+				return a.nickname ? a.nickname.localeCompare(b.nickname) : 0;
+			});
+
+			members.forEach((member) => {
+				if (member.roles.cache.has(ROLEIDS.chariots)) {
+					tm.chariots.push(member.nickname);
+				} else if (member.roles.cache.has(ROLEIDS.dynamos)) {
+					tm.dynamos.push(member.nickname);
+				} else if (member.roles.cache.has(ROLEIDS.centurions)) {
+					tm.centurions.push(member.nickname);
+				} else if (member.roles.cache.has(ROLEIDS.hurricanes)) {
+					tm.hurricanes.push(member.nickname);
+				} else if (member.roles.cache.has(ROLEIDS.spartans)) {
+					tm.spartans.push(member.nickname);
+				} else if (member.roles.cache.has(ROLEIDS.amazons)) {
+					tm.amazons.push(member.nickname);
+				} else {
+					tm.unknown.push(member.nickname);
+				}
+			});
+
+			const card = new EmbedBuilder().setTitle("Members").setDescription(
+				`Here are the members:\n
+				// get all the keys of the object
+
+						${Object.keys(tm).map((key) => {
+							return `**${key}**: ${tm[key].join(", ")}`;
+						})}`
+			);
+
+			interaction.followUp({
+				embeds: [card],
+			});
+		}
 	},
 };
 
