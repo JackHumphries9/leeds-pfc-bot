@@ -1,14 +1,18 @@
 import {
 	CommandInteractionOptionResolver,
 	EmbedBuilder,
-	Options,
+	GuildMember,
 	SlashCommandBuilder,
 } from "discord.js";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
 import { logAction } from "../utils/logAction";
 import { info } from "../utils/logger";
-import config, { ROLEIDS } from "../config";
+import { ROLEIDS } from "../config";
+
+function getNicknameOrUsername(member: GuildMember) {
+	return member.nickname || member.user.username;
+}
 
 const debug: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -94,13 +98,6 @@ const debug: ICommandExecutable = {
 			return;
 		}
 
-		const card = new EmbedBuilder()
-			.setTitle("Not found!")
-			.setDescription("Command not found!");
-
-		interaction.followUp({
-			embeds: [card],
-		});
 		if (
 			(
 				interaction.options as CommandInteractionOptionResolver
@@ -127,33 +124,38 @@ const debug: ICommandExecutable = {
 			};
 
 			members.sort((a, b) => {
-				return a.nickname ? a.nickname.localeCompare(b.nickname) : 0;
+				return getNicknameOrUsername(a)
+					? getNicknameOrUsername(a).localeCompare(
+							getNicknameOrUsername(b)
+					  )
+					: 0;
 			});
 
 			members.forEach((member) => {
 				if (member.roles.cache.has(ROLEIDS.chariots)) {
-					tm.chariots.push(member.nickname);
+					tm.chariots.push(getNicknameOrUsername(member));
 				} else if (member.roles.cache.has(ROLEIDS.dynamos)) {
-					tm.dynamos.push(member.nickname);
+					tm.dynamos.push(getNicknameOrUsername(member));
 				} else if (member.roles.cache.has(ROLEIDS.centurions)) {
-					tm.centurions.push(member.nickname);
+					tm.centurions.push(getNicknameOrUsername(member));
 				} else if (member.roles.cache.has(ROLEIDS.hurricanes)) {
-					tm.hurricanes.push(member.nickname);
+					tm.hurricanes.push(getNicknameOrUsername(member));
 				} else if (member.roles.cache.has(ROLEIDS.spartans)) {
-					tm.spartans.push(member.nickname);
+					tm.spartans.push(getNicknameOrUsername(member));
 				} else if (member.roles.cache.has(ROLEIDS.amazons)) {
-					tm.amazons.push(member.nickname);
+					tm.amazons.push(getNicknameOrUsername(member));
 				} else {
-					tm.unknown.push(member.nickname);
+					tm.unknown.push(getNicknameOrUsername(member));
 				}
 			});
 
 			const card = new EmbedBuilder().setTitle("Members").setDescription(
-				`Here are the members:\n
-				// get all the keys of the object
-
+				`Here are the members:
 						${Object.keys(tm).map((key) => {
-							return `**${key}**: ${tm[key].join(", ")}`;
+							// capitalize the first letter
+							return `\n\n**${
+								key.charAt(0).toUpperCase() + key.slice(1)
+							}**: \n${tm[key].join("\n")}`;
 						})}`
 			);
 
@@ -161,6 +163,15 @@ const debug: ICommandExecutable = {
 				embeds: [card],
 			});
 		}
+
+		const card = new EmbedBuilder()
+			.setTitle("Not found!")
+			.setDescription("Command not found!");
+
+		interaction.followUp({
+			embeds: [card],
+			ephemeral: true,
+		});
 	},
 };
 
