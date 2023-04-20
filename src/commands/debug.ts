@@ -9,10 +9,7 @@ import { hasPermissions } from "../utils/hasPermissions";
 import { logAction } from "../utils/logAction";
 import { info } from "../utils/logger";
 import { ROLEIDS } from "../config";
-
-function getNicknameOrUsername(member: GuildMember) {
-	return member.nickname || member.user.username;
-}
+import { getNicknameOrUsername } from "../utils/getNicknameOrUsername";
 
 const debug: ICommandExecutable = {
 	command: new SlashCommandBuilder()

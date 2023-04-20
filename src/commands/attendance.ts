@@ -4,6 +4,7 @@ import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
 import { logAction } from "../utils/logAction";
 import niceDate from "../utils/niceDate";
+import { getNicknameOrUsername } from "../utils/getNicknameOrUsername";
 
 const attendance: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -98,7 +99,8 @@ const attendance: ICommandExecutable = {
 
 					attendance.forEach((att) => {
 						const user = members.find((u) => att.userId === u.id);
-						attMeta += `*${user}* - ${
+						// KEEP IT AS IS DISCORD CLIENT DOES NOT LOAD IN ALL @ted users
+						attMeta += `*${getNicknameOrUsername(user)}* - ${
 							att.attending ? "Attending ✅" : "Not Attending ❌"
 						}\n`;
 					});
