@@ -42,7 +42,9 @@ const eventEmbedBuilder = (data: IEventEmbedBuilderData): EmbedBuilder => {
 		e.setColor("#4aaace");
 	}
 
-	e.setDescription(`${when}${where}${notes}\n${forr}\n${data.body}`);
+	const body = data.body ? "\n" + data.body : "";
+
+	e.setDescription(`${when}${where}${notes}\n${forr}${body}`);
 	return e;
 };
 
