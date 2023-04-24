@@ -38,11 +38,6 @@ const debug: ICommandExecutable = {
 	execute: async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
-		logAction(
-			`Debug command used by ${interaction.user.tag}`,
-			interaction.client
-		);
-
 		const perms = await hasPermissions(interaction);
 
 		if (!perms) return;
@@ -52,15 +47,20 @@ const debug: ICommandExecutable = {
 				interaction.options as CommandInteractionOptionResolver
 			).getSubcommand() === "clear"
 		) {
+			logAction(
+				`Debug clear command used by ${interaction.user.tag}`,
+				interaction.client
+			);
+
 			const all: boolean = (
 				interaction.options as CommandInteractionOptionResolver
-			).getBoolean("data");
+			).getBoolean("all");
 
 			if (all) {
 				info("Clearing the store");
 				global.repository.clearAttendance();
 			} else {
-				info("Clearing the old store");
+				info("Clearing the old data from the store");
 				global.repository.clearOldAttendance();
 			}
 
@@ -80,6 +80,11 @@ const debug: ICommandExecutable = {
 				interaction.options as CommandInteractionOptionResolver
 			).getSubcommand() === "view"
 		) {
+			logAction(
+				`Debug view command used by ${interaction.user.tag}`,
+				interaction.client
+			);
+
 			const card = new EmbedBuilder().setTitle("Store View")
 				.setDescription(`Here is the store:
 \`\`\`json\n${JSON.stringify(
@@ -100,6 +105,11 @@ const debug: ICommandExecutable = {
 				interaction.options as CommandInteractionOptionResolver
 			).getSubcommand() === "list-members"
 		) {
+			logAction(
+				`Debug list-members command used by ${interaction.user.tag}`,
+				interaction.client
+			);
+
 			const members = await interaction.guild.members.fetch();
 
 			let tm: {
@@ -159,6 +169,8 @@ const debug: ICommandExecutable = {
 			interaction.followUp({
 				embeds: [card],
 			});
+
+			return;
 		}
 
 		const card = new EmbedBuilder()

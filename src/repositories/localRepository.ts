@@ -63,7 +63,7 @@ export class LocalRepository extends Repository {
 
 	async clearOldAttendance(): Promise<void> {
 		this.db = this.db.filter(
-			(a) => a.at > firstDayOfWeek(new Date(), 1).getTime()
+			(a) => a.at < firstDayOfWeek(new Date(), 1).getTime()
 		);
 	}
 }

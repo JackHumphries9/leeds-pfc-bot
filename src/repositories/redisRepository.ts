@@ -26,7 +26,7 @@ export class RedisRepository extends Repository {
 	}
 
 	async clearAttendance(): Promise<void> {
-		this.db.flushDb();
+		await this.db.set(this.key, "[]");
 	}
 
 	async getAttendanceFromEventId(eventId: string): Promise<Attendance[]> {
@@ -119,7 +119,7 @@ export class RedisRepository extends Repository {
 		const now = Date.now();
 
 		const newAttendance = attendance.filter(
-			(a) => now - a.at < firstDayOfWeek(new Date(), 1).getTime()
+			(a) => a.at > firstDayOfWeek(new Date(), 1).getTime()
 		);
 
 		await this.db.set(this.key, JSON.stringify(newAttendance));
