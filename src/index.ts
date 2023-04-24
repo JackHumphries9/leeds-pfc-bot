@@ -48,7 +48,7 @@ if (!CLIENT_ID) {
 global.commands = {
 	// [ping.command.name]: ping,
 	// [show_training_for.command.name]: show_training_for,
-	[show_training.command.name]: show_training,
+	//[show_training.command.name]: show_training,
 	[my_training.command.name]: my_training,
 	[refresh_cache.command.name]: refresh_cache,
 	[rsvp.command.name]: rsvp,

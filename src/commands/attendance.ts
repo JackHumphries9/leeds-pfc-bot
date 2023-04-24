@@ -123,27 +123,27 @@ const attendance: ICommandExecutable = {
 						where: event.location,
 					});
 
-					return new EmbedBuilder()
-						.setColor(
-							config.eventMap[event.subcalendar_ids[0]].colour ||
-								("#4aaace" as ColorResolvable)
-						)
-						.setTitle(
-							event.title && event.title.length > 0
-								? event.title
-								: "Untitled Event"
-						)
-						.setDescription(`**Time**: ${meta}\n${attMeta}`)
-						.setFooter({
-							text: `For: ${event.subcalendar_ids
-								.map((id) =>
-									config.eventMap[id.toString()]
-										? config.eventMap[id.toString()].name
-										: null
-								)
-								.filter((i) => i)
-								.join(", ")}`,
-						});
+					// return new EmbedBuilder()
+					// 	.setColor(
+					// 		config.eventMap[event.subcalendar_ids[0]].colour ||
+					// 			("#4aaace" as ColorResolvable)
+					// 	)
+					// 	.setTitle(
+					// 		event.title && event.title.length > 0
+					// 			? event.title
+					// 			: "Untitled Event"
+					// 	)
+					// 	.setDescription(`**Time**: ${meta}\n${attMeta}`)
+					// 	.setFooter({
+					// 		text: `For: ${event.subcalendar_ids
+					// 			.map((id) =>
+					// 				config.eventMap[id.toString()]
+					// 					? config.eventMap[id.toString()].name
+					// 					: null
+					// 			)
+					// 			.filter((i) => i)
+					// 			.join(", ")}`,
+					// 	});
 				})
 			)
 		).filter((event) => event);

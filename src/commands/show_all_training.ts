@@ -3,6 +3,7 @@ import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { logAction } from "../utils/logAction";
 import niceDate from "../utils/niceDate";
+import eventEmbedBuilder from "../utils/eventEmbedBuilder";
 
 const show_training: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -46,36 +47,42 @@ const show_training: ICommandExecutable = {
 
 		interaction.followUp({
 			embeds: global.calendar_cache.map((event) => {
-				const meta = niceDate(
-					new Date(event.start_dt),
-					new Date(event.end_dt),
-					event.all_day
-				);
+				return eventEmbedBuilder({
+					title: event.title,
+					notes: event.notes,
+					when: niceDate(
+						new Date(event.start_dt),
+						new Date(event.end_dt),
+						event.all_day
+					),
+					for: event.subcalendar_ids,
+					where: event.location,
+				});
 
-				return new EmbedBuilder()
-					.setColor(
-						config.eventMap[event.subcalendar_ids[0]].colour ||
-							("#4aaace" as ColorResolvable)
-					)
-					.setTitle(
-						event.title && event.title.length > 0
-							? event.title
-							: "Untitled Event"
-					)
-					.setDescription(
-						`**Time**: ${meta}
-${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
-					)
-					.setFooter({
-						text: `For: ${event.subcalendar_ids
-							.map((id) =>
-								config.eventMap[id.toString()]
-									? config.eventMap[id.toString()].name
-									: null
-							)
-							.filter((i) => i)
-							.join(", ")}`,
-					});
+				// 				return new EmbedBuilder()
+				// 					.setColor(
+				// 						config.eventMap[event.subcalendar_ids[0]].colour ||
+				// 							("#4aaace" as ColorResolvable)
+				// 					)
+				// 					.setTitle(
+				// 						event.title && event.title.length > 0
+				// 							? event.title
+				// 							: "Untitled Event"
+				// 					)
+				// 					.setDescription(
+				// 						`**Time**: ${meta}
+				// ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
+				// 					)
+				// 					.setFooter({
+				// 						text: `For: ${event.subcalendar_ids
+				// 							.map((id) =>
+				// 								config.eventMap[id.toString()]
+				// 									? config.eventMap[id.toString()].name
+				// 									: null
+				// 							)
+				// 							.filter((i) => i)
+				// 							.join(", ")}`,
+				// 					});
 			}),
 		});
 	},
