@@ -106,7 +106,7 @@ const debug: ICommandExecutable = {
 			).getSubcommand() === "list-members"
 		) {
 			logAction(
-				`Debug list-members command used by ${interaction.user.tag}`,
+				`Debug clear command used by ${interaction.user.tag}`,
 				interaction.client
 			);
 
