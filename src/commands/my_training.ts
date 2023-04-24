@@ -1,9 +1,15 @@
-import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import {
+	ColorResolvable,
+	EmbedBuilder,
+	GuildMemberRoleManager,
+	SlashCommandBuilder,
+} from "discord.js";
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { Attendance } from "../types/UtilTypes";
 import { logAction } from "../utils/logAction";
 import niceDate from "../utils/niceDate";
+import eventEmbedBuilder from "../utils/eventEmbedBuilder";
 
 const my_training: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -50,10 +56,20 @@ const my_training: ICommandExecutable = {
 				global.calendar_cache.map(async (event) => {
 					var shouldShow = false;
 
+					if (
+						!Object.keys(config.eventMap).includes(
+							event.subcalendar_ids[0].toString()
+						)
+					) {
+						return;
+					}
+
 					event.subcalendar_ids.forEach(async (id) => {
 						if (
-							//@ts-ignore
-							interaction.member.roles.cache.find((role) =>
+							(
+								interaction.member
+									.roles as GuildMemberRoleManager
+							).cache.find((role) =>
 								config.eventMap[id.toString()].roleId.includes(
 									role.id.toString()
 								)
@@ -67,50 +83,62 @@ const my_training: ICommandExecutable = {
 						return;
 					}
 
-					const meta = niceDate(
-						new Date(event.start_dt),
-						new Date(event.end_dt),
-						event.all_day
-					);
-
 					const att: Attendance =
 						await global.repository.getEventAttendanceForUser(
 							event.id,
 							interaction.user.id
 						);
 
-					return new EmbedBuilder()
-						.setColor(
-							config.eventMap[event.subcalendar_ids[0]].colour ||
-								("#4aaace" as ColorResolvable)
-						)
-						.setTitle(
-							event.title && event.title.length > 0
-								? event.title
-								: "Untitled Event"
-						)
-						.setDescription(
-							`**Time**: ${meta}
-${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}
-${
-	att
-		? att.attending
-			? ":white_check_mark: You are attending this event."
-			: ":negative_squared_cross_mark: You are not attending this event."
-		: ":question: You have not RSVP'd to this event."
-}
-`
-						)
-						.setFooter({
-							text: `For: ${event.subcalendar_ids
-								.map((id) =>
-									config.eventMap[id.toString()]
-										? config.eventMap[id.toString()].name
-										: null
-								)
-								.filter((i) => i)
-								.join(", ")}`,
-						});
+					return eventEmbedBuilder({
+						title: event.title,
+						notes: event.notes,
+						for: event.subcalendar_ids,
+						when: niceDate(
+							new Date(event.start_dt),
+							new Date(event.end_dt),
+							event.all_day
+						),
+						where: event.location,
+						body: att
+							? att.attending
+								? ":white_check_mark: You are attending this event."
+								: ":negative_squared_cross_mark: You are not attending this event."
+							: ":question: You have not RSVP'd to this event.",
+					});
+
+					// 					return new EmbedBuilder()
+					// 						.setColor(
+					// 							config.eventMap[event.subcalendar_ids[0]].colour ||
+					// 								("#4aaace" as ColorResolvable)
+					// 						)
+					// 						.setTitle(
+					// 							event.title && event.title.length > 0
+					// 								? event.title
+					// 								: "Untitled Event"
+					// 						)
+					// 						.setDescription(
+					// 							`**Time**: ${meta}
+					// ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}
+					// ${
+					// 	att
+					// 		? att.attending
+					// 			? ":white_check_mark: You are attending this event."
+					// 			: ":negative_squared_cross_mark: You are not attending this event."
+					// 		: ":question: You have not RSVP'd to this event."
+					// }
+					// `
+					// 						)
+					// 						.setFooter({
+					// 							text: `For: ${event.subcalendar_ids
+					// 								.map((id) =>
+					// 									config.eventMap[id.toString()]
+					// 										? config.eventMap[id.toString()].name
+					// 										: null
+					// 								)
+					// 								.filter((i) => i)
+					// 								.join(", ")}`,
+					// 						});
+					// 				})
 				})
 			)
 		).filter((event) => event);

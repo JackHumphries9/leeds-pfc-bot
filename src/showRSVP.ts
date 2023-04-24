@@ -11,6 +11,7 @@ import niceDate from "./utils/niceDate";
 import { firstDayOfWeek } from "./utils/temporal";
 import eventEmbedBuilder from "./utils/eventEmbedBuilder";
 import { TimestampStyle, timestamp } from "discord-string-formatting";
+import { debug } from "./utils/logger";
 
 export const showRSVP = async (channel: TextChannel) => {
 	if (global.calendar_cache.length === 0) {
@@ -27,12 +28,18 @@ export const showRSVP = async (channel: TextChannel) => {
 		return;
 	}
 
-	global.calendar_cache.map(async (event) => {
-		const meta = await channel.send({
+	global.calendar_cache.forEach(async (event) => {
+		if (
+			!Object.keys(config.eventMap).includes(
+				event.subcalendar_ids[0].toString()
+			)
+		) {
+			return;
+		}
+		await channel.send({
 			embeds: [
 				eventEmbedBuilder({
 					title: event.title,
-					color: config.eventMap[event.subcalendar_ids[0]].colour,
 					for: event.subcalendar_ids,
 					notes: event.notes,
 					when: niceDate(

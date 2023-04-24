@@ -5,6 +5,7 @@ import { hasPermissions } from "../utils/hasPermissions";
 import { logAction } from "../utils/logAction";
 import niceDate from "../utils/niceDate";
 import { getNicknameOrUsername } from "../utils/getNicknameOrUsername";
+import eventEmbedBuilder from "../utils/eventEmbedBuilder";
 
 const attendance: ICommandExecutable = {
 	command: new SlashCommandBuilder()
@@ -89,7 +90,7 @@ const attendance: ICommandExecutable = {
 							event.id
 						);
 
-					var attMeta = `\n**RSVP**:\n`;
+					var attMeta = `**RSVP**:\n`;
 
 					if (attendance.length === 0) {
 						attMeta += "No one has RSVP'd for this event yet.";
@@ -103,6 +104,23 @@ const attendance: ICommandExecutable = {
 						attMeta += `*${getNicknameOrUsername(user)}* - ${
 							att.attending ? "Attending ✅" : "Not Attending ❌"
 						}\n`;
+					});
+
+					if (
+						!Object.keys(config.eventMap).includes(
+							event.subcalendar_ids[0].toString()
+						)
+					) {
+						return;
+					}
+
+					return eventEmbedBuilder({
+						title: event.title,
+						for: event.subcalendar_ids,
+						body: attMeta,
+						notes: event.notes,
+						when: meta,
+						where: event.location,
 					});
 
 					return new EmbedBuilder()

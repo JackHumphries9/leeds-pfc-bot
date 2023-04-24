@@ -1,13 +1,14 @@
 import { ColorResolvable, EmbedBuilder, bold } from "discord.js";
 import config from "../config";
+import { debug } from "./logger";
 
 interface IEventEmbedBuilderData {
 	title: string;
-	color?: ColorResolvable;
 	where?: string;
 	when?: string;
 	for: string[];
 	notes?: string;
+	body?: string;
 }
 
 const eventEmbedBuilder = (data: IEventEmbedBuilderData): EmbedBuilder => {
@@ -35,9 +36,13 @@ const eventEmbedBuilder = (data: IEventEmbedBuilderData): EmbedBuilder => {
 		data.title && data.title.length > 0 ? data.title : "Untitled Event"
 	);
 
-	e.setColor(data.color || "#4aaace");
+	if (Object.keys(config.eventMap).includes(data.for[0].toString())) {
+		e.setColor(config.eventMap[data.for[0].toString()].colour || "#4aaace");
+	} else {
+		e.setColor("#4aaace");
+	}
 
-	e.setDescription(`${when}${where}${notes}\n${forr}`);
+	e.setDescription(`${when}${where}${notes}\n${forr}\n${data.body}`);
 	return e;
 };
 
