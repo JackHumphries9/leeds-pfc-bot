@@ -1,6 +1,5 @@
-import { ColorResolvable, EmbedBuilder, bold } from "discord.js";
+import {  EmbedBuilder, bold } from "discord.js";
 import config from "../config";
-import { debug } from "./logger";
 
 interface IEventEmbedBuilderData {
 	title: string;
