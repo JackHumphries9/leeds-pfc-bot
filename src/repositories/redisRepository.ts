@@ -1,15 +1,10 @@
-import { Repository } from "./repository";
+import {Repository, SetAttendanceResponse} from "./repository";
 
-import { Attendance } from "../types/UtilTypes";
-import {
-	RedisClientType,
-	RedisFunctions,
-	RedisModules,
-	RedisScripts,
-} from "redis";
-import { redisConnect } from "./redisConnect";
+import {IAttendance} from "../types/UtilTypes";
+import {RedisClientType, RedisFunctions, RedisModules, RedisScripts,} from "redis";
+import {redisConnect} from "./redisConnect";
 import config from "../config";
-import { firstDayOfWeek } from "../utils/temporal";
+import {firstDayOfWeek} from "../utils/temporal";
 
 export class RedisRepository extends Repository {
 	private db: RedisClientType<RedisModules, RedisFunctions, RedisScripts>;
@@ -29,28 +24,28 @@ export class RedisRepository extends Repository {
 		await this.db.set(this.key, "[]");
 	}
 
-	async getAttendanceFromEventId(eventId: string): Promise<Attendance[]> {
+	async getAttendanceFromEventId(eventId: string): Promise<IAttendance[]> {
 		const attendanceStr = await this.db.get(this.key);
 
 		if (!attendanceStr) {
 			return [];
 		}
 
-		const attendance = JSON.parse(attendanceStr) as Attendance[];
+		const attendance = JSON.parse(attendanceStr) as IAttendance[];
 		return attendance.filter((a) => a.eventId === eventId);
 	}
 
 	async getEventAttendanceForUser(
 		eventId: string,
 		userId: string
-	): Promise<Attendance> {
+	): Promise<IAttendance | undefined> {
 		const attendanceStr = await this.db.get(this.key);
 
 		if (!attendanceStr) {
 			return undefined;
 		}
 
-		const attendance = JSON.parse(attendanceStr) as Attendance[];
+		const attendance = JSON.parse(attendanceStr) as IAttendance[];
 		return attendance.find(
 			(a) => a.eventId === eventId && a.userId === userId
 		);
@@ -60,15 +55,15 @@ export class RedisRepository extends Repository {
 		userId: string,
 		eventId: string,
 		attending: boolean
-	): Promise<{ updated: boolean }> {
+	): Promise<SetAttendanceResponse> {
 		const attendanceStr = await this.db.get(this.key);
 
-		let attendance: Attendance[];
+		let attendance: IAttendance[];
 
 		if (!attendanceStr) {
 			attendance = [];
 		} else {
-			attendance = JSON.parse(attendanceStr) as Attendance[];
+			attendance = JSON.parse(attendanceStr) as IAttendance[];
 		}
 
 		const update = attendance.findIndex(
@@ -78,7 +73,7 @@ export class RedisRepository extends Repository {
 		if (update !== -1) {
 			attendance[update] = {
 				...attendance[update],
-				attending: attending,
+				isAttending: attending,
 			};
 			await this.db.set(this.key, JSON.stringify(attendance));
 			return { updated: true };
@@ -87,24 +82,22 @@ export class RedisRepository extends Repository {
 		attendance.push({
 			userId: userId,
 			eventId: eventId,
-			attending: attending,
-			at: Date.now(),
+			isAttending: attending,
+			createdAt: Date.now(),
 		});
 		await this.db.set(this.key, JSON.stringify(attendance));
 
 		return { updated: false };
 	}
 
-	async getAllAttendance(): Promise<Attendance[]> {
+	async getAllAttendance(): Promise<IAttendance[]> {
 		const attendanceStr = await this.db.get(this.key);
 
 		if (!attendanceStr) {
 			return [];
 		}
 
-		const attendance = JSON.parse(attendanceStr) as Attendance[];
-
-		return attendance;
+		return JSON.parse(attendanceStr) as IAttendance[];
 	}
 
 	async clearOldAttendance(): Promise<void> {
@@ -114,12 +107,10 @@ export class RedisRepository extends Repository {
 			return;
 		}
 
-		const attendance = JSON.parse(attendanceStr) as Attendance[];
-
-		const now = Date.now();
+		const attendance = JSON.parse(attendanceStr) as IAttendance[];
 
 		const newAttendance = attendance.filter(
-			(a) => a.at > firstDayOfWeek(new Date(), 1).getTime()
+			(a) => a.createdAt > firstDayOfWeek(new Date(), 1).getTime()
 		);
 
 		await this.db.set(this.key, JSON.stringify(newAttendance));

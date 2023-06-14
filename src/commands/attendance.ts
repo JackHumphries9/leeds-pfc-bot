@@ -1,4 +1,4 @@
-import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import config from "../config";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { hasPermissions } from "../utils/hasPermissions";
@@ -37,7 +37,7 @@ const attendance: ICommandExecutable = {
 					"Failed to show the calendar. Please try again later or use the `/refresh-cache` command."
 				);
 
-			interaction.followUp({
+			await interaction.followUp({
 				embeds: [card],
 			});
 			return;
@@ -51,7 +51,7 @@ const attendance: ICommandExecutable = {
 					"There are no training sessions scheduled for this week."
 				);
 
-			interaction.followUp({
+			await interaction.followUp({
 				embeds: [card],
 			});
 			return;
@@ -102,7 +102,7 @@ const attendance: ICommandExecutable = {
 						const user = members.find((u) => att.userId === u.id);
 						// KEEP IT AS IS DISCORD CLIENT DOES NOT LOAD IN ALL @ted users
 						attMeta += `*${getNicknameOrUsername(user)}* - ${
-							att.attending ? "Attending ✅" : "Not Attending ❌"
+							att.isAttending ? "Attending ✅" : "Not Attending ❌"
 						}\n`;
 					});
 
@@ -149,7 +149,7 @@ const attendance: ICommandExecutable = {
 		).filter((event) => event);
 
 		if (embeds.length === 0) {
-			interaction.followUp({
+			await interaction.followUp({
 				embeds: [
 					new EmbedBuilder()
 						.setTitle("No Events Found!")
@@ -162,7 +162,7 @@ const attendance: ICommandExecutable = {
 			return;
 		}
 
-		interaction.followUp({
+		await interaction.followUp({
 			embeds: embeds,
 		});
 	},

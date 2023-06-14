@@ -18,7 +18,6 @@ import {
 	my_training,
 	refresh_cache,
 	rsvp,
-	show_training,
 	say,
 } from "./commands";
 import { showRSVP } from "./showRSVP";
@@ -28,6 +27,7 @@ import { handleVerifyModal } from "./handlers/handleVerifyModal";
 import { handleVerify } from "./handlers/handleVerify";
 import customIdParser from "./utils/commandParser";
 import handleAcceptVerify from "./handlers/handleAcceptVerify";
+
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -59,6 +59,7 @@ global.commands = {
 
 //global.repository = new LocalRepository();
 global.repository = new RedisRepository();
+//global.repository = new MongoRepository();
 
 (async () => await registerCommands(global.commands))();
 
@@ -166,7 +167,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return;
 	info(`Executing button interaction '${interaction.customId}...'`);
 
-	const { command, data: commandData } = customIdParser(interaction.customId);
+	const { command} = customIdParser(interaction.customId);
 
 	if (command === "rsvp") {
 		try {

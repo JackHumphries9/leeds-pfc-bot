@@ -2,7 +2,6 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
-	ColorResolvable,
 	EmbedBuilder,
 	TextChannel,
 } from "discord.js";
@@ -11,7 +10,6 @@ import niceDate from "./utils/niceDate";
 import { firstDayOfWeek } from "./utils/temporal";
 import eventEmbedBuilder from "./utils/eventEmbedBuilder";
 import { TimestampStyle, timestamp } from "discord-string-formatting";
-import { debug } from "./utils/logger";
 
 export const showRSVP = async (channel: TextChannel) => {
 	if (global.calendar_cache.length === 0) {
@@ -28,7 +26,7 @@ export const showRSVP = async (channel: TextChannel) => {
 		return;
 	}
 
-	global.calendar_cache.forEach(async (event) => {
+	global.calendar_cache.forEach((event) => {
 		if (
 			!Object.keys(config.eventMap).includes(
 				event.subcalendar_ids[0].toString()
@@ -36,7 +34,7 @@ export const showRSVP = async (channel: TextChannel) => {
 		) {
 			return;
 		}
-		await channel.send({
+		channel.send({
 			embeds: [
 				eventEmbedBuilder({
 					title: event.title,
@@ -57,14 +55,17 @@ export const showRSVP = async (channel: TextChannel) => {
 						.setCustomId(`rsvp/${event.id}?ok`)
 						.setLabel("I can attend!")
 						.setStyle(ButtonStyle.Success),
+
 					new ButtonBuilder()
 						.setCustomId(`rsvp/${event.id}?notok`)
 						.setLabel("I cannot attend!")
-						.setStyle(ButtonStyle.Danger)
-				) as any,
+						.setStyle(ButtonStyle.Danger),
+
+				) as ActionRowBuilder<ButtonBuilder>,
 			],
 		});
 	});
+
 	await channel.send({
 		embeds: [
 			new EmbedBuilder()
@@ -82,13 +83,26 @@ export const showRSVP = async (channel: TextChannel) => {
 			new ActionRowBuilder().addComponents(
 				new ButtonBuilder()
 					.setCustomId(`command/mytraining`)
-					.setLabel("My Training")
-					.setStyle(ButtonStyle.Primary),
+					.setLabel("My Events")
+					.setStyle(ButtonStyle.Primary)
+					.setEmoji({
+						name: "⚽",
+					}),
 				new ButtonBuilder()
 					.setCustomId(`command/attendance`)
 					.setLabel("Show Attendance")
 					.setStyle(ButtonStyle.Secondary)
-			) as any,
+					.setEmoji({
+						name: "📄"
+					}),
+				new ButtonBuilder()
+					.setURL("https://teamup.com/kskyj7z43n7wb9wq5r")
+					.setLabel("View Calendar")
+					.setStyle(ButtonStyle.Link)
+					.setEmoji({
+						name: "🗓️"
+					}),
+			) as ActionRowBuilder<ButtonBuilder>,
 		],
 	});
 };

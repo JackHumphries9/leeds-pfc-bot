@@ -1,18 +1,22 @@
-import { Attendance } from "../types/UtilTypes";
+import { IAttendance } from "../types/UtilTypes";
+
+export interface SetAttendanceResponse {
+	updated: boolean
+}
 
 export abstract class Repository {
 	async clearAttendance(): Promise<void> {
 		throw new Error("Method not implemented.");
 	}
 
-	async getAttendanceFromEventId(eventId: string): Promise<Attendance[]> {
+	async getAttendanceFromEventId(eventId: string): Promise<IAttendance[]> {
 		throw new Error("Method not implemented.");
 	}
 
 	async getEventAttendanceForUser(
 		eventId: string,
 		userId: string
-	): Promise<Attendance> {
+	): Promise<IAttendance> {
 		throw new Error("Method not implemented.");
 	}
 
@@ -20,11 +24,11 @@ export abstract class Repository {
 		userId: string,
 		eventId: string,
 		attending: boolean
-	): Promise<{ updated: boolean }> {
+	): Promise<SetAttendanceResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	async getAllAttendance(): Promise<Attendance[]> {
+	async getAllAttendance(): Promise<IAttendance[]> {
 		throw new Error("Method not implemented.");
 	}
 

@@ -45,7 +45,7 @@ const show_training_for: ICommandExecutable = {
 					"Failed to show the calendar. Please try again later or use the `/refresh-cache` command."
 				);
 
-			interaction.followUp({
+			await interaction.followUp({
 				embeds: [card],
 			});
 			return;
@@ -59,7 +59,7 @@ const show_training_for: ICommandExecutable = {
 					"There are no training sessions scheduled for this week."
 				);
 
-			interaction.followUp({
+			await interaction.followUp({
 				embeds: [card],
 			});
 			return;
@@ -67,7 +67,7 @@ const show_training_for: ICommandExecutable = {
 
 		const embeds = global.calendar_cache
 			.map((event) => {
-				var shouldShow = false;
+				let shouldShow = false;
 				event.subcalendar_ids.forEach((id) => {
 					if (
 						config.eventMap[id.toString()].roleId.find(
@@ -123,17 +123,15 @@ ${event.notes.length > 1 ? `**Notes**: ${event.notes}` : "  "}`
 					"There are no training sessions scheduled for this week."
 				);
 
-			interaction.followUp({
+			await interaction.followUp({
 				embeds: [card],
 			});
 			return;
 		}
 
-		interaction.followUp({
+		await interaction.followUp({
 			embeds: embeds,
 		});
-
-		//await interaction.reply("Pong!");
 	},
 };
 

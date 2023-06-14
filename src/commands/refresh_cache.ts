@@ -54,7 +54,7 @@ ${JSON.stringify(data, null, 4)}
 				.setColor("#FF0000")
 				.setDescription("Failed to update the calendar cache.");
 		} finally {
-			interaction.followUp({
+			await interaction.followUp({
 				embeds: [card],
 			});
 		}

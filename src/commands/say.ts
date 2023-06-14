@@ -62,28 +62,43 @@ const print: ICommandExecutable = {
 							.setStyle(ButtonStyle.Link)
 							.setURL(
 								"https://www.youtube.com/@leedspowerchairfc/videos"
-							),
+							)
+							.setEmoji({
+								id: "1118543905768603810"
+							}),
 						new ButtonBuilder()
 							.setLabel("Instagram")
 							.setStyle(ButtonStyle.Link)
-							.setURL("https://www.instagram.com/leedspfc/"),
+							.setURL("https://www.instagram.com/leedspfc/")
+							.setEmoji({
+								id: "1118543879382249535"
+							}),
 						new ButtonBuilder()
 							.setLabel("TikTok")
 							.setStyle(ButtonStyle.Link)
-							.setURL("https://www.tiktok.com/@leedspfc"),
-						new ButtonBuilder()
+							.setURL("https://www.tiktok.com/@leedspfc")
+							.setEmoji({
+								id: "1118543853918617720",
+							}),
+					new ButtonBuilder()
 							.setLabel("Twitter")
 							.setStyle(ButtonStyle.Link)
-							.setURL("https://twitter.com/leedspfc"),
+							.setURL("https://twitter.com/leedspfc")
+							.setEmoji({
+								id: "1118544005899239474"
+							}),
 						new ButtonBuilder()
 							.setLabel("Website")
 							.setStyle(ButtonStyle.Link)
 							.setURL("https://www.leedspowerchairfc.co.uk")
+							.setEmoji({
+								name: "🌐"
+							})
 					) as any,
 				],
 			});
 
-			interaction.followUp("Okie Dokie!");
+			await interaction.followUp("Okie Dokie!");
 
 			return;
 		}
@@ -100,15 +115,15 @@ const print: ICommandExecutable = {
 				)
 				.setColor("#4aaace");
 
-			const stCard = new EmbedBuilder()
-				.setTitle("Show your training sessions")
-				.setDescription(
-					"To view your training sessions, just type `/training` and I'll show you your training sessions for the week! Try it in any channel!"
-				)
-				.setImage(
-					"https://jhresources.ams3.digitaloceanspaces.com/lpfc/bot/tutorial-training-command.gif"
-				)
-				.setColor("#4aaace");
+			// const stCard = new EmbedBuilder()
+			// 	.setTitle("Show your training sessions")
+			// 	.setDescription(
+			// 		"To view your training sessions, just type `/training` and I'll show you your training sessions for the week! Try it in any channel!"
+			// 	)
+			// 	.setImage(
+			// 		"https://jhresources.ams3.digitaloceanspaces.com/lpfc/bot/tutorial-training-command.gif"
+			// 	)
+			// 	.setColor("#4aaace");
 
 			const atCard = new EmbedBuilder()
 				.setTitle("Confirm your attendance")
@@ -123,15 +138,15 @@ const print: ICommandExecutable = {
 			const sCard = new EmbedBuilder()
 				.setTitle("Any Questions?")
 				.setDescription(
-					`I am not yet sentient so I cannot answer any questions. If you do have any questions, please contact <@!438350665430073345> and he will be happy to help you!`
+					`If you do have any questions, please contact <@!438350665430073345> and he will be happy to help you!`
 				)
 				.setColor("#4aaace");
 
 			interaction.channel.send({
-				embeds: [card, stCard, atCard, sCard],
+				embeds: [card,  atCard, sCard],
 			});
 
-			interaction.followUp("Okie Dokie!");
+			await interaction.followUp("Okie Dokie!");
 
 			return;
 		}
@@ -158,11 +173,14 @@ const print: ICommandExecutable = {
 							.setLabel("Verify")
 							.setStyle(ButtonStyle.Primary)
 							.setCustomId("verify")
+							.setEmoji({
+								name: "🪪"
+							})
 					) as any,
 				],
 			});
 
-			interaction.followUp("Okie Dokie!");
+			await interaction.followUp("Okie Dokie!");
 
 			return;
 		}
@@ -171,7 +189,7 @@ const print: ICommandExecutable = {
 			.setTitle("Not found!")
 			.setDescription("Command not found!");
 
-		interaction.followUp({
+		await interaction.followUp({
 			embeds: [card],
 		});
 	},

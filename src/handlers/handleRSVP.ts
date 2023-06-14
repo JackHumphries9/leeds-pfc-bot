@@ -118,7 +118,7 @@ const handleRSVP = async (
 			);
 		}
 
-		interaction.followUp({
+		await interaction.followUp({
 			ephemeral: true,
 			embeds: [
 				new EmbedBuilder()

@@ -5,11 +5,12 @@ import { Repository } from "../repositories/repository";
 import { ICommandExecutable } from "./ICommandExecutable";
 import { TeamUpEvent } from "./TeamUpEvent";
 
-export interface Attendance {
+export interface IAttendance {
 	userId: string;
-	attending: boolean;
+	isAttending: boolean;
 	eventId: string;
-	at: number;
+	createdAt?: number;
+	updatedAt?: number;
 }
 declare global {
 	var calendar_cache: TeamUpEvent[];

@@ -1,11 +1,11 @@
-import { Repository } from "./repository";
+import {Repository, SetAttendanceResponse} from "./repository";
 
-import { Attendance } from "../types/UtilTypes";
+import { IAttendance } from "../types/UtilTypes";
 import { debug } from "../utils/logger";
 import { firstDayOfWeek } from "../utils/temporal";
 
 export class LocalRepository extends Repository {
-	private db: Attendance[];
+	private db: IAttendance[];
 
 	constructor() {
 		super();
@@ -16,14 +16,14 @@ export class LocalRepository extends Repository {
 		this.db = [];
 	}
 
-	async getAttendanceFromEventId(eventId: string): Promise<Attendance[]> {
+	async getAttendanceFromEventId(eventId: string): Promise<IAttendance[]> {
 		return this.db.filter((a) => a.eventId === eventId);
 	}
 
 	async getEventAttendanceForUser(
 		eventId: string,
 		userId: string
-	): Promise<Attendance> {
+	): Promise<IAttendance | undefined> {
 		return this.db.find(
 			(a) => a.eventId === eventId && a.userId === userId
 		);
@@ -33,7 +33,7 @@ export class LocalRepository extends Repository {
 		userId: string,
 		eventId: string,
 		attending: boolean
-	): Promise<{ updated: boolean }> {
+	): Promise<SetAttendanceResponse> {
 		const update = this.db.findIndex(
 			(a) => a.userId === userId && a.eventId === eventId
 		);
@@ -41,7 +41,8 @@ export class LocalRepository extends Repository {
 		if (update !== -1) {
 			this.db[update] = {
 				...this.db[update],
-				attending: attending,
+				isAttending: attending,
+				updatedAt: Date.now()
 			};
 			return { updated: true };
 		}
@@ -49,21 +50,21 @@ export class LocalRepository extends Repository {
 		this.db.push({
 			userId: userId,
 			eventId: eventId,
-			attending: attending,
-			at: Date.now(),
+			isAttending: attending,
+			createdAt: Date.now(),
 		});
 		debug(JSON.stringify(this.db));
 
 		return { updated: false };
 	}
 
-	async getAllAttendance(): Promise<Attendance[]> {
+	async getAllAttendance(): Promise<IAttendance[]> {
 		return this.db;
 	}
 
 	async clearOldAttendance(): Promise<void> {
 		this.db = this.db.filter(
-			(a) => a.at < firstDayOfWeek(new Date(), 1).getTime()
+			(a) => a.createdAt < firstDayOfWeek(new Date(), 1).getTime()
 		);
 	}
 }

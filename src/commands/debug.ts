@@ -1,7 +1,6 @@
 import {
 	CommandInteractionOptionResolver,
 	EmbedBuilder,
-	GuildMember,
 	SlashCommandBuilder,
 } from "discord.js";
 import { ICommandExecutable } from "../types/ICommandExecutable";
@@ -166,7 +165,7 @@ const debug: ICommandExecutable = {
 						})}`
 			);
 
-			interaction.followUp({
+			await interaction.followUp({
 				embeds: [card],
 			});
 
@@ -177,7 +176,7 @@ const debug: ICommandExecutable = {
 			.setTitle("Not found!")
 			.setDescription("Command not found!");
 
-		interaction.followUp({
+		await interaction.followUp({
 			embeds: [card],
 			ephemeral: true,
 		});

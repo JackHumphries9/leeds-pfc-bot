@@ -5,7 +5,6 @@ import {
 	CacheType,
 	EmbedBuilder,
 	MessageActionRowComponentBuilder,
-	MessageComponentBuilder,
 	ModalSubmitInteraction,
 	TextChannel,
 } from "discord.js";
@@ -25,13 +24,13 @@ export const handleVerify = async (
 
 	if (!ch) {
 		logError("Channel not found");
-		interaction.followUp({
+		await interaction.followUp({
 			content: `Looks like we have a problem! Please contact an adminstrator!`,
 		});
 		return;
 	}
 
-	ch.send({
+	await ch.send({
 		embeds: [
 			new EmbedBuilder()
 				.setTitle("Verification")
@@ -51,7 +50,7 @@ export const handleVerify = async (
 		],
 	});
 
-	interaction.reply({
+	await interaction.reply({
 		content: `Thanks for verifying ${name}! We'll get back to you soon!`,
 		ephemeral: true,
 	});

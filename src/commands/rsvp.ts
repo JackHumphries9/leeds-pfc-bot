@@ -187,7 +187,7 @@ const rsvp: ICommandExecutable = {
 		// 				.setColor("#4aaace"),
 		// 		],
 		// 	});
-		interaction.followUp({
+		await interaction.followUp({
 			embeds: [
 				new EmbedBuilder()
 					.setTitle("Unused Command")

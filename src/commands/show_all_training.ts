@@ -1,5 +1,4 @@
-import { ColorResolvable, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import config from "../config";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { ICommandExecutable } from "../types/ICommandExecutable";
 import { logAction } from "../utils/logAction";
 import niceDate from "../utils/niceDate";
@@ -25,7 +24,7 @@ const show_training: ICommandExecutable = {
 					"Failed to show the calendar. Please try again later or use the `/refresh-cache` command."
 				);
 
-			interaction.followUp({
+			await interaction.followUp({
 				embeds: [card],
 			});
 			return;
@@ -39,13 +38,13 @@ const show_training: ICommandExecutable = {
 					"There are no training sessions scheduled for this week."
 				);
 
-			interaction.followUp({
+			await interaction.followUp({
 				embeds: [card],
 			});
 			return;
 		}
 
-		interaction.followUp({
+		await interaction.followUp({
 			embeds: global.calendar_cache.map((event) => {
 				return eventEmbedBuilder({
 					title: event.title,
