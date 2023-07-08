@@ -28,7 +28,8 @@ import { handleVerify } from "./handlers/handleVerify";
 import customIdParser from "./utils/commandParser";
 import handleAcceptVerify from "./handlers/handleAcceptVerify";
 import ping from "./commands/ping";
-import { NotificationManager } from "./notificationManager";
+import { NotificationManager } from "./managers/notificationManager";
+import { CacheManager } from "./managers/cacheManager";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -70,43 +71,7 @@ const client = new Client({
 
 const notificationManager = new NotificationManager(client);
 
-// Setup automatic cache refresh
-const rule = new schedule.RecurrenceRule();
-rule.dayOfWeek = 1;
-rule.hour = 7;
-rule.minute = 30;
-
-const job = schedule.scheduleJob(rule, async () => {
-	info("Starting Scheduled Job");
-
-	logAction("Starting Scheduled Job", client);
-
-	global.calendar_cache = await fetchCalendarData();
-
-	info("Cache refreshed");
-	info("Finding channel");
-
-	const ch = client.channels.cache.find(
-		(c) => c.id === config.tdChannelId
-	) as TextChannel;
-
-	if (!ch) {
-		logError("Channel not found");
-		return;
-	}
-
-	// Clear channel
-	info("Channel found - clearing");
-
-	const messages = await ch.messages.fetch();
-	messages.map((m) => m.delete());
-
-	info("Channel cleared, sending new messages");
-
-	showRSVP(ch).then(() => {
-		info("Job complete");
-	});
-});
+const cacheManager = new CacheManager(client);
 
 client.once(Events.ClientReady, async (c) => {
 	info(`Ready! Logged in as ${c.user.tag}`);

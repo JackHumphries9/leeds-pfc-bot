@@ -1,5 +1,5 @@
 import schedule from "node-schedule";
-import { CronDays, TimingRule } from "./cronTiming";
+import { CronDays, TimingRule } from "../cronTiming";
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -9,10 +9,10 @@ import {
 	GuildMember,
 	GuildMemberRoleManager,
 } from "discord.js";
-import config from "./config";
-import { IAttendance } from "./types/UtilTypes";
-import { TeamUpEvent } from "./types/TeamUpEvent";
-import { debug, info } from "./utils/logger";
+import config from "../config";
+import { IAttendance } from "../types/UtilTypes";
+import { TeamUpEvent } from "../types/TeamUpEvent";
+import { debug, info } from "../utils/logger";
 
 interface NotificationEventState {
 	canSendNotification: boolean;
