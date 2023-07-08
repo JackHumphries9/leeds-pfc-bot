@@ -24,6 +24,7 @@ export interface BotConfig {
 	verifyRoleId: string;
 	stage: string;
 	allowedExecutors: string[];
+	playersRoleId: string;
 }
 
 export const stage = process.env.STAGE || "dev";
@@ -58,6 +59,7 @@ const devConfig: BotConfig = {
 	verifyRoleId: "1089639719803044031",
 	stage: "dev",
 	allowedExecutors: ["1070294013778862080"],
+	playersRoleId: "1127291056657010729",
 
 	eventMap: {
 		"11026484": {
@@ -129,6 +131,7 @@ const prodConfig: BotConfig = {
 	verifyRoleId: "1089639996690006078",
 	stage: "prod",
 	allowedExecutors: ["1070294013778862080"],
+	playersRoleId: "1127270913512054965",
 
 	eventMap: {
 		"11026484": {

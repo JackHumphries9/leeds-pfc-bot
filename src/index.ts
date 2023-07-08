@@ -28,6 +28,7 @@ import { handleVerify } from "./handlers/handleVerify";
 import customIdParser from "./utils/commandParser";
 import handleAcceptVerify from "./handlers/handleAcceptVerify";
 import ping from "./commands/ping";
+import { NotificationManager } from "./notificationManager";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -66,6 +67,8 @@ global.repository = new RedisRepository();
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
 });
+
+const notificationManager = new NotificationManager(client);
 
 // Setup automatic cache refresh
 const rule = new schedule.RecurrenceRule();
@@ -128,6 +131,30 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			await interaction.editReply({
 				content: "RSVP updated!",
 			});
+		} catch (error) {
+			logError(
+				"There was an error while executing this command! More info:",
+				error
+			);
+
+			await interaction.reply({
+				content: "There was an error while executing this command!",
+				ephemeral: true,
+			});
+		}
+		return;
+	}
+
+	if (interaction.commandName === "ping") {
+		await interaction.deferReply({ ephemeral: true });
+
+		try {
+			await notificationManager.job();
+
+			// await interaction.reply({
+			// 	content: "Done!",
+			// 	ephemeral: true,
+			// });
 		} catch (error) {
 			logError(
 				"There was an error while executing this command! More info:",

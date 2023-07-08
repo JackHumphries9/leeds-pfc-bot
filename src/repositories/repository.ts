@@ -1,7 +1,7 @@
 import { IAttendance } from "../types/UtilTypes";
 
 export interface SetAttendanceResponse {
-	updated: boolean
+	updated: boolean;
 }
 
 export abstract class Repository {
@@ -33,6 +33,10 @@ export abstract class Repository {
 	}
 
 	async clearOldAttendance(): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
+
+	async getAttendanceForUser(userId: string): Promise<IAttendance[]> {
 		throw new Error("Method not implemented.");
 	}
 }

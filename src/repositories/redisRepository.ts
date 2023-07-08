@@ -1,10 +1,15 @@
-import {Repository, SetAttendanceResponse} from "./repository";
+import { Repository, SetAttendanceResponse } from "./repository";
 
-import {IAttendance} from "../types/UtilTypes";
-import {RedisClientType, RedisFunctions, RedisModules, RedisScripts,} from "redis";
-import {redisConnect} from "./redisConnect";
+import { IAttendance } from "../types/UtilTypes";
+import {
+	RedisClientType,
+	RedisFunctions,
+	RedisModules,
+	RedisScripts,
+} from "redis";
+import { redisConnect } from "./redisConnect";
 import config from "../config";
-import {firstDayOfWeek} from "../utils/temporal";
+import { firstDayOfWeek } from "../utils/temporal";
 
 export class RedisRepository extends Repository {
 	private db: RedisClientType<RedisModules, RedisFunctions, RedisScripts>;
@@ -114,5 +119,16 @@ export class RedisRepository extends Repository {
 		);
 
 		await this.db.set(this.key, JSON.stringify(newAttendance));
+	}
+
+	async getAttendanceForUser(userId: string): Promise<IAttendance[]> {
+		const attendanceStr = await this.db.get(this.key);
+
+		if (!attendanceStr) {
+			return [];
+		}
+
+		const attendance = JSON.parse(attendanceStr) as IAttendance[];
+		return attendance.filter((a) => a.userId === userId);
 	}
 }
