@@ -138,21 +138,19 @@ export class NotificationManager {
 				`You haven't confirmed your attendance yet for these events: \n- ${eventsToAcknowledge}\nPlease click the button below to go to the #training-dates channel.`
 			);
 
-		debug("Sending notification to " + user.user.username);
-
-		// await user.send({
-		// 	embeds: [notificationMessage],
-		// 	components: [
-		// 		new ActionRowBuilder<ButtonBuilder>().addComponents(
-		// 			new ButtonBuilder()
-		// 				.setStyle(ButtonStyle.Link)
-		// 				.setURL(
-		// 					"https://discord.com/channels/1064867500711497738/1073596981164904498"
-		// 				)
-		// 				.setLabel("Training Dates")
-		// 				.setEmoji("📅")
-		// 		),
-		// 	],
-		// });
+		await user.send({
+			embeds: [notificationMessage],
+			components: [
+				new ActionRowBuilder<ButtonBuilder>().addComponents(
+					new ButtonBuilder()
+						.setStyle(ButtonStyle.Link)
+						.setURL(
+							"https://discord.com/channels/1064867500711497738/1073596981164904498"
+						)
+						.setLabel("Training Dates")
+						.setEmoji("📅")
+				),
+			],
+		});
 	}
 }
