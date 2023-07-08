@@ -27,7 +27,7 @@ import { handleVerifyModal } from "./handlers/handleVerifyModal";
 import { handleVerify } from "./handlers/handleVerify";
 import customIdParser from "./utils/commandParser";
 import handleAcceptVerify from "./handlers/handleAcceptVerify";
-
+import ping from "./commands/ping";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -46,7 +46,7 @@ if (!CLIENT_ID) {
 
 // Set globals
 global.commands = {
-	// [ping.command.name]: ping,
+	[ping.command.name]: ping,
 	// [show_training_for.command.name]: show_training_for,
 	//[show_training.command.name]: show_training,
 	[my_training.command.name]: my_training,
@@ -167,7 +167,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return;
 	info(`Executing button interaction '${interaction.customId}...'`);
 
-	const { command} = customIdParser(interaction.customId);
+	const { command } = customIdParser(interaction.customId);
 
 	if (command === "rsvp") {
 		try {
