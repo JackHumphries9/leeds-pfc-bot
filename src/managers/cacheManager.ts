@@ -15,7 +15,7 @@ export class CacheManager {
 		hour: 7,
 		minute: 30,
 	};
-	private client: Client<boolean>;
+	private scheduledJob: schedule.Job;
 
 	constructor(client: Client<boolean>) {
 		this.recurranceRule = new schedule.RecurrenceRule();
@@ -23,22 +23,28 @@ export class CacheManager {
 		this.recurranceRule.hour = this.ruleTiming.hour;
 		this.recurranceRule.minute = this.ruleTiming.minute;
 
-		schedule.scheduleJob(this.recurranceRule, this.job);
-
-		this.client = client;
+		this.scheduledJob = schedule.scheduleJob(this.recurranceRule, () => {
+			this.job(client);
+		});
 	}
 
-	public async job(): Promise<void> {
+	public async invoke(): Promise<void> {
+		this.scheduledJob.invoke();
+	}
+
+	public async job(client: Client<boolean>): Promise<void> {
 		info("Starting Cache Update Job");
 
-		logAction("Starting Cache Update Job", this.client);
+		//logAction("Starting Cache Update Job", this.client);
 
 		global.calendar_cache = await fetchCalendarData();
+
+		console.dir(client);
 
 		info("Cache refreshed");
 		info("Finding channel");
 
-		const ch = this.client.channels.cache.find(
+		const ch = client.channels.cache.find(
 			(c) => c.id === config.tdChannelId
 		) as TextChannel;
 

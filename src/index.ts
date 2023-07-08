@@ -70,7 +70,6 @@ const client = new Client({
 });
 
 const notificationManager = new NotificationManager(client);
-
 const cacheManager = new CacheManager(client);
 
 client.once(Events.ClientReady, async (c) => {
@@ -92,7 +91,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 			if (!perms) return;
 
-			job.invoke();
+			cacheManager.invoke();
 			await interaction.editReply({
 				content: "RSVP updated!",
 			});
@@ -114,7 +113,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
-			await notificationManager.job();
+			await notificationManager.invoke();
 
 			// await interaction.reply({
 			// 	content: "Done!",

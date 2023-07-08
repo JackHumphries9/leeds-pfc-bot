@@ -26,24 +26,30 @@ export class NotificationManager {
 		hour: 12,
 		minute: 0,
 	};
-	private client: Client<boolean>;
+	private scheduledJob: schedule.Job;
 
 	constructor(client: Client<boolean>) {
+		client = client;
+
 		this.recurranceRule = new schedule.RecurrenceRule();
 		this.recurranceRule.dayOfWeek = this.ruleTiming.dayOfWeek;
 		this.recurranceRule.hour = this.ruleTiming.hour;
 		this.recurranceRule.minute = this.ruleTiming.minute;
 
-		schedule.scheduleJob(this.recurranceRule, this.job);
-
-		this.client = client;
+		this.scheduledJob = schedule.scheduleJob(this.recurranceRule, () => {
+			this.job(client);
+		});
 	}
 
-	public async job(): Promise<void> {
+	public async invoke(): Promise<void> {
+		this.scheduledJob.invoke();
+	}
+
+	public async job(client: Client<boolean>): Promise<void> {
 		info("Notification job triggered!");
 
 		// get guild
-		const guild = await this.client.guilds.fetch(config.guildId);
+		const guild = await client.guilds.fetch(config.guildId);
 
 		// get all users
 		const members = await guild.members.fetch();
@@ -53,7 +59,7 @@ export class NotificationManager {
 				member.roles.cache.has(config.playersRoleId) &&
 				!member.user.bot
 			) {
-				this.sendNotification(member);
+				this.sendNotification(client, member);
 			}
 		});
 
@@ -61,6 +67,7 @@ export class NotificationManager {
 	}
 
 	private async canSendNotification(
+		client: Client<boolean>,
 		user: GuildMember
 	): Promise<NotificationEventState> {
 		const usersAttendance = await global.repository.getAttendanceForUser(
@@ -110,8 +117,11 @@ export class NotificationManager {
 		};
 	}
 
-	private async sendNotification(user: GuildMember): Promise<void> {
-		const notificationState = await this.canSendNotification(user);
+	private async sendNotification(
+		client: Client<boolean>,
+		user: GuildMember
+	): Promise<void> {
+		const notificationState = await this.canSendNotification(client, user);
 
 		if (!notificationState.canSendNotification) {
 			return;
