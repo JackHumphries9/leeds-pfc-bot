@@ -120,9 +120,10 @@ const devConfig: BotConfig = {
 const prodConfig: BotConfig = {
 	guildId: "1064867500711497738",
 	adminRoleIds: [
-		"1064867500711497743",
-		"1064867500711497740",
-		"1095340176399667220",
+		"1064867500711497743", // Administrator
+		"1064867500711497740", // Owner
+		"1095340176399667220", // Comittee
+		"1064893723714015332", // Coach
 	],
 	welcomeChannelId: "1064867501231575119",
 	tdChannelId: "1073596981164904498",
