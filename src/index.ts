@@ -30,6 +30,7 @@ import handleAcceptVerify from "./handlers/handleAcceptVerify";
 import ping from "./commands/ping";
 import { NotificationManager } from "./managers/notificationManager";
 import { CacheManager } from "./managers/cacheManager";
+import { PostgresRepository } from "./repositories/postgresRepository";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -60,8 +61,9 @@ global.commands = {
 };
 
 //global.repository = new LocalRepository();
-global.repository = new RedisRepository();
+
 //global.repository = new MongoRepository();
+global.repository = new PostgresRepository();
 
 (async () => await registerCommands(global.commands))();
 

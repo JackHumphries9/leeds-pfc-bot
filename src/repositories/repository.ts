@@ -5,38 +5,24 @@ export interface SetAttendanceResponse {
 }
 
 export abstract class Repository {
-	async clearAttendance(): Promise<void> {
-		throw new Error("Method not implemented.");
-	}
+	abstract clearAttendance(): Promise<void>;
 
-	async getAttendanceFromEventId(eventId: string): Promise<IAttendance[]> {
-		throw new Error("Method not implemented.");
-	}
+	abstract clearOldAttendance(): Promise<void>;
 
-	async getEventAttendanceForUser(
+	abstract getAttendanceFromEventId(eventId: string): Promise<IAttendance[]>;
+
+	abstract getEventAttendanceForUser(
 		eventId: string,
 		userId: string
-	): Promise<IAttendance> {
-		throw new Error("Method not implemented.");
-	}
+	): Promise<IAttendance | undefined>;
 
-	async setAttendance(
+	abstract setAttendance(
 		userId: string,
 		eventId: string,
 		attending: boolean
-	): Promise<SetAttendanceResponse> {
-		throw new Error("Method not implemented.");
-	}
+	): Promise<SetAttendanceResponse>;
 
-	async getAllAttendance(): Promise<IAttendance[]> {
-		throw new Error("Method not implemented.");
-	}
+	abstract getAllAttendance(): Promise<IAttendance[]>;
 
-	async clearOldAttendance(): Promise<void> {
-		throw new Error("Method not implemented.");
-	}
-
-	async getAttendanceForUser(userId: string): Promise<IAttendance[]> {
-		throw new Error("Method not implemented.");
-	}
+	abstract getAttendanceForUser(userId: string): Promise<IAttendance[]>;
 }

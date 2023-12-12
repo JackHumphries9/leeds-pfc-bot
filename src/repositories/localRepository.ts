@@ -1,10 +1,13 @@
-import {Repository, SetAttendanceResponse} from "./repository";
+import { Repository, SetAttendanceResponse } from "./repository";
 
 import { IAttendance } from "../types/UtilTypes";
 import { debug } from "../utils/logger";
 import { firstDayOfWeek } from "../utils/temporal";
 
 export class LocalRepository extends Repository {
+	async getAttendanceForUser(userId: string): Promise<IAttendance[]> {
+		return this.db.filter((a) => a.userId === userId);
+	}
 	private db: IAttendance[];
 
 	constructor() {
@@ -42,7 +45,7 @@ export class LocalRepository extends Repository {
 			this.db[update] = {
 				...this.db[update],
 				isAttending: attending,
-				updatedAt: Date.now()
+				updatedAt: Date.now(),
 			};
 			return { updated: true };
 		}

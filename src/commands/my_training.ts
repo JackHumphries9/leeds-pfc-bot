@@ -69,7 +69,7 @@ const my_training: ICommandExecutable = {
 								interaction.member
 									.roles as GuildMemberRoleManager
 							).cache.find((role) =>
-								config.eventMap[id.toString()].roleId.includes(
+								config.eventMap[id.toString()]?.roleId.includes(
 									role.id.toString()
 								)
 							)
@@ -104,7 +104,6 @@ const my_training: ICommandExecutable = {
 								: ":negative_squared_cross_mark: You are not attending this event."
 							: ":question: You have not RSVP'd to this event.",
 					});
-
 				})
 			)
 		).filter((event) => event);

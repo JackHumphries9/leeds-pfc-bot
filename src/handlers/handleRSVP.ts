@@ -39,10 +39,11 @@ const handleRSVP = async (
 	var canRSVP = false;
 
 	calendarEvent.subcalendar_ids.forEach((id) => {
+		console.log(id);
 		if (
 			(interaction.member.roles as GuildMemberRoleManager).cache.find(
 				(role) =>
-					config.eventMap[id.toString()].roleId.includes(
+					config.eventMap[id.toString()]?.roleId.includes(
 						role.id.toString()
 					)
 			)
@@ -105,34 +106,33 @@ const handleRSVP = async (
 					),
 			],
 		});
-	} else {
-		if (att) {
-			logAction(
-				`${interaction.user.tag} Updated their attendance to **attending** for ${calendarEvent.title}`,
-				interaction.client
-			);
-		} else {
-			logAction(
-				`${interaction.user.tag} Updated their attendance to **not attending** for ${calendarEvent.title}`,
-				interaction.client
-			);
-		}
-
-		await interaction.followUp({
-			ephemeral: true,
-			embeds: [
-				new EmbedBuilder()
-					.setTitle("RSVP")
-					.setColor("#4caf50")
-					.setDescription(
-						`Your attendance has been updated! ${
-							att
-								? "You are now attending"
-								: "You are now not attending"
-						}: ${calendarEvent.title}!`
-					),
-			],
-		});
 	}
+	if (att) {
+		logAction(
+			`${interaction.user.tag} Updated their attendance to **attending** for ${calendarEvent.title}`,
+			interaction.client
+		);
+	} else {
+		logAction(
+			`${interaction.user.tag} Updated their attendance to **not attending** for ${calendarEvent.title}`,
+			interaction.client
+		);
+	}
+
+	await interaction.followUp({
+		ephemeral: true,
+		embeds: [
+			new EmbedBuilder()
+				.setTitle("RSVP")
+				.setColor("#4caf50")
+				.setDescription(
+					`Your attendance has been updated! ${
+						att
+							? "You are now attending"
+							: "You are now not attending"
+					}: ${calendarEvent.title}!`
+				),
+		],
+	});
 };
 export { handleRSVP };
