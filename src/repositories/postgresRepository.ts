@@ -2,8 +2,7 @@ import { info } from "console";
 import { IAttendance } from "../types/UtilTypes";
 import { Repository, SetAttendanceResponse } from "./repository";
 
-import { Client as PGClient } from "pg";
-import { logError } from "../utils/logger";
+import { Pool as PGClient } from "pg";
 
 export class PostgresRepository extends Repository {
 	private db: PGClient;
