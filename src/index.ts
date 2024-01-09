@@ -1,17 +1,10 @@
-import {
-	ActivityType,
-	Client,
-	Events,
-	GatewayIntentBits,
-	TextChannel,
-} from "discord.js";
+import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import registerCommands from "./registerCommands";
 import fetchCalendarData from "./fetchCalendarData";
 import { logError, info } from "./utils/logger";
 import { handleRSVP } from "./handlers/handleRSVP";
 import config from "./config";
 import schedule from "node-schedule";
-import { RedisRepository } from "./repositories/redisRepository";
 import {
 	attendance,
 	debug_command,
@@ -20,14 +13,12 @@ import {
 	rsvp,
 	say,
 } from "./commands";
-import { showRSVP } from "./showRSVP";
 import { hasPermissions } from "./utils/hasPermissions";
 import { logAction } from "./utils/logAction";
 import { handleVerifyModal } from "./handlers/handleVerifyModal";
 import { handleVerify } from "./handlers/handleVerify";
 import customIdParser from "./utils/commandParser";
 import handleAcceptVerify from "./handlers/handleAcceptVerify";
-import ping from "./commands/ping";
 import { NotificationManager } from "./managers/notificationManager";
 import { CacheManager } from "./managers/cacheManager";
 import { PostgresRepository } from "./repositories/postgresRepository";
@@ -75,10 +66,17 @@ const notificationManager = new NotificationManager(client);
 const cacheManager = new CacheManager(client);
 
 client.once(Events.ClientReady, async (c) => {
-	info(`Ready! Logged in as ${c.user.tag}`);
-	c.user.setActivity("Powerchair Football", { type: ActivityType.Playing });
-	global.calendar_cache = await fetchCalendarData();
-	logAction("The bot has started up!", client);
+	try {
+		info(`Ready! Logged in as ${c.user.tag}`);
+		c.user.setActivity("Powerchair Football", {
+			type: ActivityType.Playing,
+		});
+		global.calendar_cache = await fetchCalendarData();
+		logAction("The bot has started up!", client);
+	} catch (error) {
+		logError("There was an error while starting up! More info:", error);
+	}
+
 	//job.invoke();
 });
 
