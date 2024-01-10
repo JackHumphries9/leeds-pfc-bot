@@ -25,4 +25,16 @@ export abstract class Repository {
 	abstract getAllAttendance(): Promise<IAttendance[]>;
 
 	abstract getAttendanceForUser(userId: string): Promise<IAttendance[]>;
+
+	abstract createEventDiscordEvent(
+		eventId: string,
+		discordEvent: string
+	): Promise<void>;
+
+	abstract getEventDiscordEvent(eventId: string): Promise<string | undefined>;
+
+	abstract updateDiscordEventId(
+		eventId: string,
+		newDiscordEventId: string
+	): Promise<void>;
 }

@@ -7,6 +7,7 @@ import fetchCalendarData from "../fetchCalendarData";
 import config from "../config";
 import { logError } from "../utils/logger";
 import { showRSVP } from "../showRSVP";
+import { EventManager } from "./eventManager";
 
 export class CacheManager {
 	private recurranceRule: schedule.RecurrenceRule;
@@ -16,8 +17,9 @@ export class CacheManager {
 		minute: 30,
 	};
 	private scheduledJob: schedule.Job;
+	private eventManager: EventManager;
 
-	constructor(client: Client<boolean>) {
+	constructor(client: Client<boolean>, eventManager: EventManager) {
 		this.recurranceRule = new schedule.RecurrenceRule();
 		this.recurranceRule.dayOfWeek = this.ruleTiming.dayOfWeek;
 		this.recurranceRule.hour = this.ruleTiming.hour;
@@ -26,6 +28,8 @@ export class CacheManager {
 		this.scheduledJob = schedule.scheduleJob(this.recurranceRule, () => {
 			this.job(client);
 		});
+
+		this.eventManager = eventManager;
 	}
 
 	public async invoke(): Promise<void> {
@@ -38,6 +42,10 @@ export class CacheManager {
 		//logAction("Starting Cache Update Job", this.client);
 
 		global.calendar_cache = await fetchCalendarData();
+
+		info("Cache fetched! Refreshing Discord events");
+
+		await this.eventManager.upsertDiscordEvents(calendar_cache);
 
 		console.dir(client);
 

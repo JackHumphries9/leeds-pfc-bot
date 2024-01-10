@@ -22,6 +22,7 @@ import handleAcceptVerify from "./handlers/handleAcceptVerify";
 import { NotificationManager } from "./managers/notificationManager";
 import { CacheManager } from "./managers/cacheManager";
 import { PostgresRepository } from "./repositories/postgresRepository";
+import { EventManager } from "./managers/eventManager";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -63,7 +64,8 @@ const client = new Client({
 });
 
 const notificationManager = new NotificationManager(client);
-const cacheManager = new CacheManager(client);
+const eventManager = new EventManager(client, global.repository);
+const cacheManager = new CacheManager(client, eventManager);
 
 client.once(Events.ClientReady, async (c) => {
 	try {
@@ -72,6 +74,7 @@ client.once(Events.ClientReady, async (c) => {
 			type: ActivityType.Playing,
 		});
 		global.calendar_cache = await fetchCalendarData();
+		await eventManager.upsertDiscordEvents(calendar_cache);
 		logAction("The bot has started up!", client);
 	} catch (error) {
 		logError("There was an error while starting up! More info:", error);

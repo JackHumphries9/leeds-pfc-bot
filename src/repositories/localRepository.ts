@@ -5,6 +5,21 @@ import { debug } from "../utils/logger";
 import { firstDayOfWeek } from "../utils/temporal";
 
 export class LocalRepository extends Repository {
+	updateDiscordEventId(
+		eventId: string,
+		newDiscordEventId: string
+	): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
+	createEventDiscordEvent(
+		eventId: string,
+		discordEvent: string
+	): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
+	getEventDiscordEvent(eventId: string): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
 	async getAttendanceForUser(userId: string): Promise<IAttendance[]> {
 		return this.db.filter((a) => a.userId === userId);
 	}

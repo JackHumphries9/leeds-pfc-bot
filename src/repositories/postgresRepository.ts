@@ -114,4 +114,41 @@ export class PostgresRepository extends Repository {
 			userId: userId,
 		}));
 	}
+
+	async createEventDiscordEvent(
+		eventId: string,
+		discordEvent: string
+	): Promise<void> {
+		await this.db.query(
+			"INSERT INTO discord_event_links (event_id, discord_id) VALUES ($1, $2)",
+			[eventId, discordEvent]
+		);
+
+		return;
+	}
+
+	async getEventDiscordEvent(eventId: string): Promise<string | undefined> {
+		const rows = await this.db.query(
+			"SELECT discord_id FROM discord_event_links WHERE event_id = $1",
+			[eventId]
+		);
+
+		if (rows.rowCount === 0) {
+			return undefined;
+		}
+
+		return rows.rows[0].discord_id;
+	}
+
+	async updateDiscordEventId(
+		eventId: string,
+		newDiscordEventId: string
+	): Promise<void> {
+		await this.db.query(
+			"UPDATE discord_event_links SET discord_id = $1 WHERE event_id = $2",
+			[newDiscordEventId, eventId]
+		);
+
+		return;
+	}
 }

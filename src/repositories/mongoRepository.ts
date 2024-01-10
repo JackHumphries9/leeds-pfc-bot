@@ -5,6 +5,21 @@ import { firstDayOfWeek } from "../utils/temporal";
 import mongoose from "mongoose";
 
 export class MongoRepository extends Repository {
+	updateDiscordEventId(
+		eventId: string,
+		newDiscordEventId: string
+	): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
+	createEventDiscordEvent(
+		eventId: string,
+		discordEvent: string
+	): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
+	getEventDiscordEvent(eventId: string): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
 	getAttendanceForUser(userId: string): Promise<IAttendance[]> {
 		throw new Error("Method not implemented.");
 	}

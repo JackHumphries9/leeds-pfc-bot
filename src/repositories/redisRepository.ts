@@ -12,6 +12,21 @@ import config from "../config";
 import { firstDayOfWeek } from "../utils/temporal";
 
 export class RedisRepository extends Repository {
+	updateDiscordEventId(
+		eventId: string,
+		newDiscordEventId: string
+	): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
+	createEventDiscordEvent(
+		eventId: string,
+		discordEvent: string
+	): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
+	getEventDiscordEvent(eventId: string): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
 	private db: RedisClientType<RedisModules, RedisFunctions, RedisScripts>;
 	private readonly key =
 		config.stage && config.stage === "prod"
