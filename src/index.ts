@@ -275,4 +275,12 @@ client.on(Events.GuildMemberAdd, async (member) => {
 	await channel.send(`Welcome to the server, ${member}!`);
 });
 
+client.on(Events.GuildScheduledEventUserAdd, async (event, user) => {
+	const eventId = await repository.getEventDiscordEvent(event.id);
+
+	if (!eventId) return;
+
+	await repository.setAttendance(user.id, eventId, true);
+});
+
 client.login(TOKEN);
