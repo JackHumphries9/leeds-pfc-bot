@@ -26,7 +26,7 @@ const ask_jeff: ICommandExecutable = {
 		})
 		.addBooleanOption((bool) => {
 			bool.setName("ephemeral");
-			bool.setDescription("Should the response be visible to everyone?");
+			bool.setDescription("Should the response be hidden?");
 			return bool;
 		}),
 	execute: async (interaction) => {
@@ -34,8 +34,8 @@ const ask_jeff: ICommandExecutable = {
 			ephemeral: (
 				interaction.options as CommandInteractionOptionResolver
 			).getBoolean("ephemeral")
-				? false
-				: true,
+				? true
+				: false,
 		});
 
 		const response = new EmbedBuilder();
