@@ -61,7 +61,11 @@ const ask_jeff: ICommandExecutable = {
 
 			response.setColor("Blue");
 			response.setDescription(`
-                ${request.data.response}
+                ${interaction.member} asked: \n> ${(
+				interaction.options as CommandInteractionOptionResolver
+			).getString("query")}
+                \nJeff responded:
+                > ${request.data.response}
     
                 *Please note that there may be mistakes and inaccuracies with the responses*
             `);
