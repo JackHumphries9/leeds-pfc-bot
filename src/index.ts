@@ -23,6 +23,7 @@ import { NotificationManager } from "./managers/notificationManager";
 import { CacheManager } from "./managers/cacheManager";
 import { PostgresRepository } from "./repositories/postgresRepository";
 import { EventManager } from "./managers/eventManager";
+import ask_jeff from "./commands/ask_jeff";
 
 process.on("SIGINT", function () {
 	schedule.gracefulShutdown().then(() => process.exit(0));
@@ -50,6 +51,7 @@ global.commands = {
 	[attendance.command.name]: attendance,
 	[debug_command.command.name]: debug_command,
 	[say.command.name]: say,
+	[ask_jeff.command.name]: ask_jeff,
 };
 
 //global.repository = new LocalRepository();
@@ -74,7 +76,7 @@ client.once(Events.ClientReady, async (c) => {
 			type: ActivityType.Playing,
 		});
 		global.calendar_cache = await fetchCalendarData();
-		await eventManager.upsertDiscordEvents(calendar_cache);
+		//await eventManager.upsertDiscordEvents(calendar_cache);
 		logAction("The bot has started up!", client);
 	} catch (error) {
 		logError("There was an error while starting up! More info:", error);
